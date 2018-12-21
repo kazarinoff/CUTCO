@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CUTCO Add a Course</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-JuAGGg3c8UPrWdf0N8ZPJyOHkACruI9+mbl0C+H6XSYOqv9xIdiUSKehRyA8jUol" crossorigin="anonymous"></head>
+<style>
+table, th, td{
+    border:1pt solid black;
+    padding: 5px;
+}
+</style>
+
+    <body>
+{% include 'navbar.html' %}
+    <h1>Welcome, {{user.username}}</h1>
+
+<form action="/courses/treqtablegenerate/" method="POST">
+    {% csrf_token %}
+    <p>Your School: <select name='yourcollegeid'>
+            {% for i in colleges %}
+        <option value="{{i.id}}">{{i.name}}</option>
+            {% endfor %}
+        </select></p>
+    <p>School You're Interested In: <select name='othercollegeid'>
+            {% for i in colleges %}
+        <option value="{{i.id}}">{{i.name}}</option>
+            {% endfor %}
+        </select></p>
+    <p><input type="submit" name="Update" value="See needed classes"></p>
+</form>
+
+<table>
+    <tr>
+        <th>{{yourcollege.name}} Courses</th>
+        <th></th>
+        <th>{{othercollege.name}} Courses</th>
+        <th></th>
+    </tr>
+    {% for h in yourcollegecourses %}
+    <tr>
+        <td><a href='/courses/{{h.id}}/'>{{h.course_name}}</a></td>
+        <td><a href='/courses/{{h.id}}/'>{{h.course_number}}</a></td>
+        
+        <td>{% for k in h.equilcourses %}
+            <a href='/courses/{{k.id}}/'>{{k.course_name}}</a><br>
+        </td>
+        <td>{{k.course_number}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="/login/logout/">logout</a>
+</body>
+</html>

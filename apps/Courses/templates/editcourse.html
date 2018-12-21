@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CUTCO Edit Course</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-JuAGGg3c8UPrWdf0N8ZPJyOHkACruI9+mbl0C+H6XSYOqv9xIdiUSKehRyA8jUol" crossorigin="anonymous"></head>
+<body>
+{% include 'navbar.html' %}
+    <h1>Welcome, {{user.username}}</h1>
+    <div>
+        <h3>Edit Course</h3>
+        <form action="/courses/{{course.id}}/update/", method="POST">
+            {% csrf_token %}
+            <p>College: {{course.college.name}}</p>
+            <p>Department: {{course.department.name}}</p>
+            {{errors.course_name}}
+            <p>Course Name: <input type='text' name="course_name" value="{{course.course_name}}"></p>
+            {{errors.course_number}}
+            <p>Course Number: <input type='text' name="course_number" value='{{course.course_number}}'></p>
+            {{errors.credits}}    
+            <p># of Credits: <input type="number" name="credits" value="{{course.credits}}"> </p>
+            <p>Prerequisites: 
+                <select name="prereqs" multiple>
+                    {% for i in prereqsselected %}
+                    <option value="{{i.id}}" selected>{{i.course_name}}</option>
+                    {% endfor %}
+                    {% for i in prereqsother %}
+                    <option value="{{i.id}}">{{i.course_name}}</option>
+                    {% endfor %}
+                </select> 
+            {{errors.course_description}}
+                <p>Course Description:</p>
+                <textarea name="course_description">{{course.course_description}}</textarea>
+            {{errors.course_outcomes}}
+            <p>Course-Outcomes: </p><textarea name="course_outcomes">{{course.course_outcomes}}</textarea>
+            <p>Course URL: <input type='text' name="course_url" value="{{course_url}}"></p>
+            <p><input type="submit" name="Update" value="Update"></p>
+        </form>
+    </div>
+    <a href="/courses/{{course.id}}/edit/" class="badge badge-secondary">Edit Course</a> | <a href="/courses/{{course.id}}/delete/" class="badge badge-secondary">Delete Course</a> | <a href="/courses/{{course.id}}/treq" class="badge badge-secondary">Set Transfer EQs</a>
+    <a href="/courses/">back to course page</a>
+    <a href="/login/logout/">logout</a>
+
+</body>
+</html>

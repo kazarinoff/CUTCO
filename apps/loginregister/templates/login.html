@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CUTCO Registration and Log-in</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-JuAGGg3c8UPrWdf0N8ZPJyOHkACruI9+mbl0C+H6XSYOqv9xIdiUSKehRyA8jUol" crossorigin="anonymous">
+<style>
+body{
+    padding:10px;
+    margin:5px;
+}
+#registration, #login{
+    display: inline-block;
+    vertical-align: top;
+    margin:60px;
+}
+h3{
+    text-align: center;
+}
+form input, select {
+    display: block;
+}
+</style>
+</head>
+<body>
+    <h1>Welcome to CUTCO the College and University Transfer Coursebook of Oregon</h1>
+    <div id="registration">
+        <h3>Register</h3>
+        <form action='/login/regval/' method='post'>
+            {% csrf_token %}
+            {{errors.first_name}}
+            <p>First Name: <input type='text' name="first_name"></p>
+            {{errors.last_name}}
+            <p>Last Name: <input type='text' name="last_name"></p>
+            {{errors.email}}    
+            <p>Email: <input type='text' name="email"> </p>
+            <p>College: <select name='college'>
+                {% for i in colleges %}
+                <option value="{{i.name}}">{{i.name}}</option>
+                {% endfor %}
+                <option value="unenrolled">At Large</option>
+                        </select></p>
+            <p>Role: <select name='role'>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="administrator">Administrator</option>
+                <option value="none">None</option>
+            </select></p>
+            {{errors.username}}    
+            <p>Username: <input type='text' name="username"> </p>
+            {{errors.password}}
+            <p>Password: <input type='password' name="password"></p>
+            {{errors.confirmpw}}
+            <p>Confirm PW: <input type='password' name="confirmpw"></p>
+            <p><input type="submit" name="Register"></p>
+        </form>
+    </div>
+    <div id="login">
+        <h3>Login</h3>
+        <form action='/login/loginval/' method='post'>
+            {% csrf_token %}
+        {{errors.loginusername}}
+            <p>Username: <input type='text' name="username"></p>
+        {{errors.loginpassword}}
+        <p>Password: <input type='password' name="password"></p>
+        <input type="submit" name="Login">
+        </form>
+    </div>
+</body>
+</html>

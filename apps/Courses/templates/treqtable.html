@@ -16,7 +16,7 @@ table, th, td{
     <body>
 {% include 'navbar.html' %}
     <h1>Welcome, {{user.username}}</h1>
-
+<div class=''>
 <form action="/courses/treqtablegenerate/" method="POST">
     {% csrf_token %}
     <p>Your School: <select name='yourcollegeid'>
@@ -33,7 +33,7 @@ table, th, td{
 </form>
 
 <table>
-    <tr>
+    <tr class='table-primary'>
         <th>{{yourcollege.name}} Courses</th>
         <th></th>
         <th>{{othercollege.name}} Courses</th>
@@ -45,14 +45,14 @@ table, th, td{
         <td><a href='/courses/{{h.id}}/'>{{h.course_number}}</a></td>
         
         <td>{% for k in h.equilcourses %}
-            <a href='/courses/{{k.id}}/'>{{k.course_name}}</a><br>
+            <a href='/courses/{{k.id}}/'>{{k.course_name}}</a><br>{% endfor %}
         </td>
-        <td>{{k.course_number}}</td>
-        {% endfor %}
+        <td>{% for k in h.equilcourses %}<a href='/courses/{{k.id}}/'>{{k.course_number}}</a><br>{% endfor %}</td>
     </tr>
     {% endfor %}
 </table>
 
 <a href="/login/logout/">logout</a>
+</div>
 </body>
 </html>

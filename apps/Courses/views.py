@@ -8,7 +8,15 @@ def home(request):
         return redirect('/login/')
     else:
         x=User.objects.get(id=request.session['loggedid'])
-        context={'user':x, 'admin':x.accesslevel, 'courses':Course.objects.all().order_by('college','department','course_number'), 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
+        courses=Course.objects.all().order_by('college','department','course_number')
+        courseinfo=[]
+        for z in courses:
+            print(z,'print?')
+            pqs=[]
+            for k in z.prereqs.all():
+                pqs.append(k)
+            courseinfo.append({'course_name':z.course_name,'course_number':z.course_number, 'id':z.id,'prereqs':pqs,'credits':z.credits})
+        context={'user':x, 'admin':x.accesslevel, 'courses':courseinfo, 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
         return render (request,'courseshome.html',context)
 
 def viewcourse(request,idnumber):
@@ -131,11 +139,11 @@ def edittreq(request,idnumber):
 def treqtable(request):
     x=User.objects.get(id=request.session['loggedid'])
     if 'treqtablecollegeid1' not in request.session:
-        yourcollege=College.objects.first().formatcollege
+        yourcollege=College.objects.first()
     else:
         yourcollege=College.objects.get(id=request.session['treqtablecollegeid1'])
     if 'treqtablecollegeid2' not in request.session:
-        othercollege=College.objects.last().formatcollege
+        othercollege=College.objects.last()
         othercollegeid=othercollege.id
     else:
         othercollege=College.objects.get(id=request.session['treqtablecollegeid2'])

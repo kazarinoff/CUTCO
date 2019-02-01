@@ -20,5 +20,6 @@ from apps.loginregister import views
 urlpatterns = [
     path('login/', include('apps.loginregister.urls')),
     path('courses/', include('apps.Courses.urls')),
-    path('',views.index, name='mainredirect')
+    path('',views.index, name='mainredirect'),
+    path('allow/', include('apps.permissions.urls'))
 ]

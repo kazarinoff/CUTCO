@@ -22,7 +22,7 @@ def regval(request):
             pwdcrpt=pwd.decode('utf-8')
             print(pwdcrpt)
             x=User.objects.create(first_name=request.POST['first_name'],last_name=request.POST['last_name'],email=request.POST['email'], username=request.POST['username'], passwordhash=pwdcrpt)
-            x.college.add(College.objects.get(name=str(request.POST['college'])))
+            x.colleges.add(College.objects.get(name=str(request.POST['college'])))
             x.save()
             request.session['loggedid']=User.objects.last().id
             return redirect('/courses/')

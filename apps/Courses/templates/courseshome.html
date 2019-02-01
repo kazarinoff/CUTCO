@@ -10,24 +10,34 @@
 <body>
 {% include 'navbar.html' %}
     <h1> HOME PAGE. Welcome {{username}}</h1>
-    <div class="card-deck">
-            {% for course in courses %}
-                <div class="card text-white bg-info mb-3" style="max-width: 17rem; min-width: 17rem;">
-                    <div class="card-header"> {{ course.college.name }}</div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ course.course_number }}<br>{{ course.course_name }}</h5>
-                        <p class="card-text">{{ course.course_description }}</p>
-                        <a href='/courses/{{course.id}}' class="badge badge-secondary">Details</a>
-                    </div>
-                    <div class="card-footer bg-transparent text-center text-muted text-white-50">
-                        {% if admin >= 7 %}
+<div>
+    <table class='table table-bordered table-hover'>
+        <tr class='table-primary'>
+            <th>Course Number</th>
+            <th>Course Name</th>
+            <th>Credits</th>
+            <th>Prereqs</th>
+            <th>Actions</th>
+        </tr>
+        {% for course in courses %}
+            <tr>
+                <td>{{ course.course_name }}</td>
+                <td>{{ course.course_number }}</td>
+                <td>{{ course.credits }}</td>
+                <td>{% for x in course.prereqs %}
+                    {{ x.course_name}},
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href='/courses/{{course.id}}' class="badge badge-secondary">Details</a> | 
+                    {% if admin >= 7 %}
                         <a href="/courses/{{course.id}}/edit/" class="badge badge-secondary">Edit Course</a> | <a href="/courses/{{course.id}}/delete/" class="badge badge-secondary">Delete Course</a> | <a href="/courses/{{course.id}}/treq" class="badge badge-secondary">Set Transfer EQs</a>
-                        {% endif %}
-                    </div>
-                </div>
+                    {% endif %}
+                </td>
+            </tr>
             {% endfor %}
-        </div>
-
+    </table>        
+</div>
 <a href="/login/logout/">logout</a>
 </body>
 </html>

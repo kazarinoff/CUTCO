@@ -10,8 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
+# to do:
+# get settings_secret to work
+# edit courseblock style
+# email capability:
+#     registration/login/reset password
+#     updates
+#     asking for security clearance
+# security clearance
+#     user levels- 10-SUadmin, 9-4year admins, 8-2year admins, 7-teachers, 6-students/public?
+#     ability to edit clearance level of users from admins
+# registration setup?
+#     maybe validate w/ correct email addy
+#     maybe ask for clearance from appropriate admins
+# make treqtable look pretty and fully functional
+# build out coursebook for 3 colleges
+# optimize treqtable queries
+# optimize course edit queries
+
+
 import os
-from settings_secret import *
+# from settings_secret.py import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,7 +40,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secret_key_variable
+SECRET_KEY = ')h9ul857_14cxmb32t$$g-9o8=idpu-19wutwolkhf*^)4zf%d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,6 +51,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'apps.permissions',
     'apps.Courses',
     'apps.loginregister',
     'django.contrib.admin',

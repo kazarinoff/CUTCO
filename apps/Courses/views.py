@@ -7,16 +7,18 @@ def home(request):
     if 'loggedid' not in request.session:
         return redirect('/login/')
     else:
+        alldepts=Dept.objects.all()
+        alldeptinfo=[]
+        for eachdept in alldepts:
+            eachdeptcourses=[]
+            for c in eachdept.courses.all():
+                pqs=[]
+                for k in c.prereqs.all():
+                    pqs.append(k)
+                eachdeptcourses.append({'course_name':c.course_name,'course_number':c.course_number, 'id':c.id,'prereqs':pqs,'credits':c.credits})
+            alldeptinfo.append({'deptname':eachdept.name,'courses':eachdeptcourses})    
         x=User.objects.get(id=request.session['loggedid'])
-        courses=Course.objects.all().order_by('college','department','course_number')
-        courseinfo=[]
-        for z in courses:
-            print(z,'print?')
-            pqs=[]
-            for k in z.prereqs.all():
-                pqs.append(k)
-            courseinfo.append({'course_name':z.course_name,'course_number':z.course_number, 'id':z.id,'prereqs':pqs,'credits':z.credits})
-        context={'user':x, 'admin':x.accesslevel, 'courses':courseinfo, 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
+        context={'user':x, 'admin':x.accesslevel, 'coursesbydept':alldeptinfo, 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
         return render (request,'courseshome.html',context)
 
 def viewcourse(request,idnumber):

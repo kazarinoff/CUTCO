@@ -22,7 +22,7 @@ class User(models.Model):
     username=models.CharField(max_length=50)
     email=models.CharField(max_length=50)
     colleges=models.ManyToManyField(College,related_name='users')
-    departments=models.ManyToManyField(Dept,related_name='users')
+    permissions=models.ManyToManyField(Dept,through='Permission')
     role=models.CharField(max_length=20)
     passwordhash=models.CharField(max_length=255)
     accesslevel=models.IntegerField(default=1)
@@ -30,6 +30,11 @@ class User(models.Model):
     updated_at=models.DateTimeField(auto_now_add=True)
     def __repr__(self):
         return ("USER: {}".format(self.first_name))
+
+class Permission(models.Model):
+    dept = models.ForeignKey(Dept, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    level = models.IntegerField(default=0)
 
 class ValidationManager(models.Manager):
     def validatereg(self, postData):

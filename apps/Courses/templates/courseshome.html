@@ -11,32 +11,37 @@
 {% include 'navbar.html' %}
     <h1> HOME PAGE. Welcome {{username}}</h1>
 <div>
-    <table class='table table-bordered table-hover'>
-        <tr class='table-primary'>
-            <th>Course Number</th>
-            <th>Course Name</th>
-            <th>Credits</th>
-            <th>Prereqs</th>
-            <th>Actions</th>
-        </tr>
-        {% for course in courses %}
-            <tr>
-                <td>{{ course.course_name }}</td>
-                <td>{{ course.course_number }}</td>
-                <td>{{ course.credits }}</td>
-                <td>{% for x in course.prereqs %}
-                    {{ x.course_name}},
-                    {% endfor %}
-                </td>
-                <td>
-                    <a href='/courses/{{course.id}}' class="badge badge-secondary">Details</a> | 
-                    {% if admin >= 7 %}
-                        <a href="/courses/{{course.id}}/edit/" class="badge badge-secondary">Edit Course</a> | <a href="/courses/{{course.id}}/delete/" class="badge badge-secondary">Delete Course</a> | <a href="/courses/{{course.id}}/treq" class="badge badge-secondary">Set Transfer EQs</a>
-                    {% endif %}
-                </td>
+    {% for dept in coursesbydept %}
+        <h3>{{ dept.deptname }}</h3>
+        <table class='table table-responsive-lg table-bordered table-hover'>
+            <tr class='table-primary'>
+                <th>Course Number</th>
+                <th>Course Name</th>
+                <th>Credits</th>
+                <th>Prereqs</th>
+                <th>Actions</th>
             </tr>
+            {% for course in dept.courses %}
+                <tr>
+                    <td>{{ course.course_number }}</td>
+                    <td>{{ course.course_name }}</td>
+                    <td>{{ course.credits }}</td>
+                    <td>{% for x in course.prereqs %}
+                            {{x.course_number }},
+                            {% endfor %}
+                    </td>
+                    <td>
+                        <a href='/courses/{{course.id}}' class="badge badge-secondary">Details</a> | 
+                        {% if admin >= 7 %}
+                            <a href="/courses/{{course.id}}/edit/" class="badge badge-secondary">Edit Course</a> 
+                            | <a href="/courses/{{course.id}}/delete/" class="badge badge-secondary">Delete Course</a>
+                             | <a href="/courses/{{course.id}}/treq" class="badge badge-secondary">Set Transfer EQs</a>
+                        {% endif %}
+                    </td>
+                </tr>
             {% endfor %}
-    </table>        
+        </table>        
+    {% endfor %}
 </div>
 <a href="/login/logout/">logout</a>
 </body>

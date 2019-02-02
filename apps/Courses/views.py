@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from apps.loginregister.models import *
 from apps.Courses.models import *
 from datetime import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 def home(request):
     if 'loggedid' not in request.session:
@@ -37,7 +38,6 @@ def addcourseform(request):
     context={'user':x,'availdepts':d,'prereqs':Course.objects.all(),'errors':errors}
     return render(request,'addcourse.html',context)
 
-
 def addcourse(request):
     if request.method=='POST':
         x=User.objects.get(id=request.session['loggedid'])
@@ -58,13 +58,17 @@ def addcourse(request):
 def editcourse(request,idnumber):
     x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
-    if x.accesslevel < 7:
-        return HttpResponse('YOU ARE NOT ALLOWED TO ACCESS THIS AREA. YOU ARE NOT  A 7')
-    if  y.department not in x.departments.all():
-        return HttpResponse('YOU ARE NOT ALLOWED TO ACCESS THIS AREA')
+    try:
+        p=Permission.objects.get(user=x,dept=y.department)
+    except ObjectDoesNotExist:
+        p=0
+    if p==0:
+        return HttpResponse('YOU ARE NOT ALLOWED TO ACCESS THIS AREA.')
     else:
-        return render(request,'editcourse.html',{'user':x,"course":y, "prereqsselected":y.prereqs.all(), "prereqsother":Course.objects.filter(college=y.college).exclude(id=y.id)})
-
+        if p.level>=1:
+            return render(request,'editcourse.html',{'user':x,"course":y, "prereqsselected":y.prereqs.all(), "prereqsother":Course.objects.filter(college=y.college).exclude(id=y.id)})
+        else:
+            return HttpResponse('YOU ARE NOT ALLOWED TO ACCESS THIS AREA.')
 def updatecourse(request,idnumber):
     if request.method=='POST':
         x=User.objects.get(id=request.session['loggedid'])
@@ -93,20 +97,27 @@ def updatecourse(request,idnumber):
 def deletecheck(request,idnumber):
     x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
-    if x.accesslevel < 7:
-        return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE. YOU ARE NOT A 7')
-    if  y.department not in x.departments.all():
-        return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE. IT AINT YOUR DEPARTMENT!')
-    return render(request,'deletecourse.html', {'user':x,'course':y})
-
+    try:
+        p=Permission.objects.get(user=x,dept=y.department)
+    except ObjectDoesNotExist:
+        p=0
+    if p==0:
+        return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE.')
+    else:
+        if p.level>=5:
+            return render(request,'deletecourse.html', {'user':x,'course':y})
+        else:
+            return HttpResponse("Please talk to your administrator to get this course deleted")
 def deletecourse(request,idnumber):
     if request.method=='POST':
         x=User.objects.get(id=request.session['loggedid'])
         y=Course.objects.get(id=idnumber)
-        if x.accesslevel < 7:
-            return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE. YOU ARE NOT A 7')
-        if  y.department not in x.departments.all():
-            return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE. IT AINT YOUR DEPARTMENT!')
+        try:
+            p=Permission.objects.get(user=x,dept=y.department)
+        except ObjectDoesNotExist:
+            p=0
+        if p==0:
+            return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE.')
         y.delete()
     return redirect('/courses/')
 
@@ -120,21 +131,18 @@ def viewtreq(request,idnumber):
 def edittreq(request,idnumber):
     x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
-    print('gotHERE!!!!!!!!!!!!!!!!!!')
     if request.method =='POST':
         if x.accesslevel < 7:
             return HttpResponse('YOU ARE NOT ALLOWED TO MODIFY EQUIVALENCIES FOR THIS COURSE. YOU ARE NOT A 7')
         if  y.department not in x.departments.all():
             return HttpResponse('YOU ARE NOT ALLOWED TO MODIFY EQUIVALENCIES FOR THIS COURSE. IT AINT YOUR DEPARTMENT!')
         ye= y.equivalencies.filter(department=request.POST['deptid'])
-        print(ye,'$$$$$$$$')
         for h in ye:
             y.equivalencies.remove(h)
         z=request.POST.getlist('equivalency')
         for item in z:
             y.equivalencies.add(Course.objects.get(id=str(item)))
         y.save()
-        print(y.equivalencies.all(),'******************')
         return redirect('/courses/'+idnumber)
     return redirect ('/courses/')
 
@@ -163,17 +171,3 @@ def treqtablegenerate(request):
         request.session['treqtablecollegeid1']=request.POST['yourcollegeid']
         request.session['treqtablecollegeid2']=request.POST['othercollegeid']
     return redirect ('/courses/treqtable/')
-
-        
-        
-
-
-
-
-
-
-    
-
-
-
-

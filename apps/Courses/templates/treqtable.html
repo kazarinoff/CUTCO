@@ -13,46 +13,47 @@ table, th, td{
 }
 </style>
 
-    <body>
+<body>
 {% include 'navbar.html' %}
-    <h1>Welcome, {{user.username}}</h1>
-<div class=''>
-<form action="/courses/treqtablegenerate/" method="POST">
-    {% csrf_token %}
-    <p>Your School: <select name='yourcollegeid'>
-            {% for i in colleges %}
-        <option value="{{i.id}}">{{i.name}}</option>
-            {% endfor %}
-        </select></p>
-    <p>School You're Interested In: <select name='othercollegeid'>
-            {% for i in colleges %}
-        <option value="{{i.id}}">{{i.name}}</option>
-            {% endfor %}
-        </select></p>
-    <p><input type="submit" name="Update" value="See needed classes"></p>
-</form>
-
-<table>
-    <tr class='table-primary'>
-        <th>{{yourcollege.name}} Courses</th>
-        <th></th>
-        <th>{{othercollege.name}} Courses</th>
-        <th></th>
-    </tr>
-    {% for h in yourcollegecourses %}
-    <tr>
-        <td><a href='/courses/{{h.id}}/'>{{h.course_name}}</a></td>
-        <td><a href='/courses/{{h.id}}/'>{{h.course_number}}</a></td>
-        
-        <td>{% for k in h.equilcourses %}
-            <a href='/courses/{{k.id}}/'>{{k.course_name}}</a><br>{% endfor %}
-        </td>
-        <td>{% for k in h.equilcourses %}<a href='/courses/{{k.id}}/'>{{k.course_number}}</a><br>{% endfor %}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<a href="/login/logout/">logout</a>
+<h1>Welcome, {{user.username}}</h1>
+<h1>Courses that will transfer:</h1>
+<div class='body'>
+    <form action="/courses/treqtablegenerate/" method="POST">
+        {% csrf_token %}
+        <p>Your School: <select name='yourcollegeid'>
+                {% for i in colleges %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                {% endfor %}
+                    </select>
+        </p>
+        <p>School You're Interested In: <select name='othercollegeid'>
+                {% for i in colleges %}
+                    <option value="{{i.id}}">{{i.name}}</option>
+                {% endfor %}
+                    </select>
+        </p>
+        <p><input type="submit" name="Update" value="See needed classes"></p>
+    </form>
+    <table>
+        <tr class='table-primary'>
+            <th>{{yourcollege.name}} Courses</th>
+            <th>Course Number</th>
+            <th>{{othercollege.name}} Courses</th>
+            <th>Course Number</th>
+        </tr>
+        {% for h in yourcollegecourses %}
+        <tr>
+            <td><a href='/courses/{{h.id}}/'>{{h.course_name}}</a></td>
+            <td><a href='/courses/{{h.id}}/'>{{h.course_number}}</a></td>
+            <td>{% for k in h.equilcourses %}
+                <a href='/courses/{{k.id}}/'>{{k.course_name}}</a><br>{% endfor %}
+            </td>
+            <td>{% for k in h.equilcourses %}
+                <a href='/courses/{{k.id}}/'>{{k.course_number}}</a><br>{% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 </body>
 </html>

@@ -61,8 +61,8 @@ def editcourse(request,idnumber):
     try:
         p=Permission.objects.get(user=x,dept=y.department)
     except ObjectDoesNotExist:
-        p=0
-    if p==0:
+        p=False
+    if not p:
         return HttpResponse('YOU ARE NOT ALLOWED TO ACCESS THIS AREA.')
     else:
         if p.level>=1:
@@ -100,8 +100,8 @@ def deletecheck(request,idnumber):
     try:
         p=Permission.objects.get(user=x,dept=y.department)
     except ObjectDoesNotExist:
-        p=0
-    if p==0:
+        p=False
+    if not p:
         return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE.')
     else:
         if p.level>=5:
@@ -115,8 +115,8 @@ def deletecourse(request,idnumber):
         try:
             p=Permission.objects.get(user=x,dept=y.department)
         except ObjectDoesNotExist:
-            p=0
-        if p==0:
+            p=False
+        if not p:
             return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE.')
         y.delete()
     return redirect('/courses/')
@@ -132,10 +132,12 @@ def edittreq(request,idnumber):
     x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
     if request.method =='POST':
-        if x.accesslevel < 7:
-            return HttpResponse('YOU ARE NOT ALLOWED TO MODIFY EQUIVALENCIES FOR THIS COURSE. YOU ARE NOT A 7')
-        if  y.department not in x.departments.all():
-            return HttpResponse('YOU ARE NOT ALLOWED TO MODIFY EQUIVALENCIES FOR THIS COURSE. IT AINT YOUR DEPARTMENT!')
+        try:
+            p=Permission.objects.get(user=x,dept=y.department)
+        except ObjectDoesNotExist:
+            p=False
+        if not p:
+            return HttpResponse('YOU ARE NOT ALLOWED TO MODIFY EQUIVALENCIES FOR THIS COURSE.')
         ye= y.equivalencies.filter(department=request.POST['deptid'])
         for h in ye:
             y.equivalencies.remove(h)

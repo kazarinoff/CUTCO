@@ -22,7 +22,7 @@ class User(models.Model):
     username=models.CharField(max_length=50)
     email=models.CharField(max_length=50)
     colleges=models.ManyToManyField(College,related_name='users')
-    permissions=models.ManyToManyField(Dept,through='Permission')
+    permissions=models.ManyToManyField(Dept,through='Permission',related_name='users')
     role=models.CharField(max_length=20)
     passwordhash=models.CharField(max_length=255)
     accesslevel=models.IntegerField(default=1)

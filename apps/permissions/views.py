@@ -6,21 +6,29 @@ from apps.Courses.models import *
 
 def permissionsedit(request):
     x= User.objects.get(id=request.session['loggedid'])
-    y= x.permissions.all()
-    yi=[]
-    for i in y:
-        p=Permission.objects.filter(dept=i)
-        print('permissionshere',p)
-        yi.append({'deptname':i.name,'collegename':i.college.name,'usersallowed':p})
-    permissions=Permission.objects.filter(user=x)
-    return render(request,'permissionupdate.html',{'user':x,'permissions':yi})
+    cd=College.objects.values('name','departments__name','departments__id','departments__users__id','departments__users__first_name','departments__users__last_name','departments__users__username','departments__users__permission__level')
+    return render(request,'permissionsindex.html',{'user':x,'newdict':cd})
 
-def permissionsshow(request):
-    x=User.objects.get(id=request.session['loggedid'])
-    y=Dept.objects.all()
-    yi=[]
-    for i in y:
-        yp=y.permissions.all()
-        yi.append({'deptname':y.name,'collegename':y.college.name,'usersallowed':yp})
-    permissions=Permission.objects.filter(user=x)
-    return render(request,'permissionsshow.html',{'user':x,'permissions':yi})
+def permissionsadd(request):
+    if request.method=='POST':
+        print('postrequest',request.POST)
+        x=User.objects.get(id=request.session['loggedid'])
+        y=User.objects.get(id=request.POST['userid'])
+        d=Dept.objects.get(id=request.POST['deptid'])
+        p=Permission.objects.create(user=y,dept=d,level=request.POST['level'])
+        p.save()
+        return redirect(request.POST['nextpath'])
+    return redirect('/courses/')
+
+def permissionsdeptadd(request,did):
+    d=Dept.objects.get(id=did)
+    nu=User.objects.exclude(permissions=d).all()
+    cu=Permission.objects.filter(dept=d).all()
+    return render (request, 'permissionsdeptindex.html',{'dept':d,'newusers':nu,'currentusers':cu})
+
+def permissionsupdate(request):
+    if request.method=='POST':
+        p=Permission.objects.get(user_id=request.POST['userid'],dept_id=request.POST['deptid'])
+        p.level=request.POST['level']
+        p.save()
+        return redirect(request.POST['nextpath'])

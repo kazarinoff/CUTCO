@@ -8,6 +8,7 @@ def home(request):
     if 'loggedid' not in request.session:
         return redirect('/login/')
     else:
+        co=College.objects.values('name','departments__name','departments__courses__course_name','departments__courses__course_number','departments__courses__credits','departments__courses__id','departments__courses__prereqs__course_number')
         alldepts=Dept.objects.all()
         alldeptinfo=[]
         for eachdept in alldepts:
@@ -19,7 +20,7 @@ def home(request):
                 eachdeptcourses.append({'course_name':c.course_name,'course_number':c.course_number, 'id':c.id,'prereqs':pqs,'credits':c.credits})
             alldeptinfo.append({'deptname':eachdept.name,'courses':eachdeptcourses})    
         x=User.objects.get(id=request.session['loggedid'])
-        context={'user':x, 'admin':x.accesslevel, 'coursesbydept':alldeptinfo, 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
+        context={'newdict':co,'user':x, 'admin':x.accesslevel, 'coursesbydept':alldeptinfo, 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
         return render (request,'courseshome.html',context)
 
 def viewcourse(request,idnumber):

@@ -47,7 +47,17 @@ def logout(request):
     request.session.clear()
     return redirect('/login/')
 
-def edituser(request):
+def showuser(request,uid):
+    x=User.objects.get(id=request.session['loggedid'])
+    y=User.objects.get(id=uid)
+    p=Permission.objects.filter(user=x).values('level','dept__name','dept__college__name')
+    if x==y:
+        buttons=True
+    else:
+        buttons=False
+    return render(request,'showuser.html',{'user':x,'profileuser':y,'permissions':p,'buttons':buttons})
+
+def edituser(request,uid):
     if 'errors' not in request.session:
         request.session['errors']={}
     x=User.objects.get(id=request.session['loggedid'])
@@ -61,12 +71,13 @@ def updateuser(request):
         errors= validator.validateupdate(request.POST)
         request.session['errors']=errors
         if len(errors)>0:
-            return redirect('/login/profile/')
+            return redirect(request.POST['nextpath'])
         x=User.objects.get(id=request.session['loggedid'])
         x.first_name=request.POST['first_name']
         x.last_name=request.POST['last_name']
         x.email=request.POST['email']
-        x.username=request.POST['username']
+        if x.username!=request.POST['username']:
+            x.username=request.POST['username']
         x.save()
-        return redirect('/courses/')
+        return redirect(request.POST['nextpath'])
     return redirect('/login/')

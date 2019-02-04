@@ -7,8 +7,7 @@ urlpatterns = [
     path('regval/',views.regval, name='regval'),
     path('loginval/',views.loginval, name='loginval'),
     path('logout/',views.logout, name='logout'),
-    path('profile/',views.edituser,name='edituser'),
+    path('profile/<uid>',views.showuser,name='showprofile'),
+    path('profile/<uid>/edit',views.edituser,name='edituser'),
     path('update/',views.updateuser,name='updateuser'),
-    # path('user/<userid>/',views.userview,name='userview'),
-
 ]

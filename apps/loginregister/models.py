@@ -79,6 +79,6 @@ class ValidationManager(models.Manager):
             errors['email'] = "This email is already in database. Please try again."
         if (len(postData['username']) < 1):
             errors["username"] = "Please enter a username."
-        if (len(User.objects.filter(username=postData['username']))>0):
+        if (len(User.objects.filter(username=postData['username']))>1):
             errors['username']='That username is already taken. Please enter a new one.'
         return errors

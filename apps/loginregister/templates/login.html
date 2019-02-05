@@ -25,48 +25,76 @@ form input, select {
 </style>
 </head>
 <body>
-    <h1>Welcome to CUTCO the College and University Transfer Coursebook of Oregon</h1>
+<div class='jumbotron'>
+    <h1 class='display-3'>Welcome to CUTCO</h1>
+    <p class='lead'>The College and University Transfer Coursebook of <strong class='text-success'>Oregon</strong></p>
     <div id="registration">
-        <h3>Register</h3>
+        <h5 class='display-4 text-success'>Register</h5>
         <form action='/login/regval/' method='post'>
             {% csrf_token %}
-            {{errors.first_name}}
-            <p>First Name: <input type='text' name="first_name"></p>
-            {{errors.last_name}}
-            <p>Last Name: <input type='text' name="last_name"></p>
-            {{errors.email}}    
-            <p>Email: <input type='text' name="email"> </p>
-            <p>College: <select name='college'>
-                {% for i in colleges %}
-                <option value="{{i.name}}">{{i.name}}</option>
-                {% endfor %}
-                <option value="unenrolled">At Large</option>
-                        </select></p>
-            <p>Role: <select name='role'>
-                <option value="student">Student</option>
-                <option value="teacher">Teacher</option>
-                <option value="administrator">Administrator</option>
-                <option value="none">None</option>
-            </select></p>
-            {{errors.username}}    
-            <p>Username: <input type='text' name="username"> </p>
-            {{errors.password}}
-            <p>Password: <input type='password' name="password"></p>
-            {{errors.confirmpw}}
-            <p>Confirm PW: <input type='password' name="confirmpw"></p>
-            <p><input type="submit" name="Register"></p>
+            <div class='form-group'>{{errors.first_name}}
+                <label for='first_name'>First Name</label><input type='text' id='first_name' name="first_name"></p>
+            </div>
+            <div class='form-group'>
+                {{errors.last_name}}
+                <label for='last_name'>Last Name</label><input type='text' name="last_name" id='last_name'>
+            </div>
+            <div class='form-group'>
+                {{errors.email}}    
+                <label for='email'>Email</label><input type='text' name="email" id='email'>
+            </div>
+            <div class='form-group'>
+                <label for='college'>College</label>
+                <select name='college' id='college'>
+                    {% for i in colleges %}
+                        <option value="{{i.id}}">{{i.name}}</option>
+                    {% endfor %}
+                    <option value="atlarge">At Large</option>
+                </select>
+            </div>
+            <div class='form-group'>
+                <label for='role'>Role</label
+                ><select name='role' id='role'>
+                    <option value='1'>Student</option>
+                    <option value="5">Teacher</option>
+                    <option value="8">Administrator</option>
+                    <option value="0">None</option>
+                </select>
+            </div>
+            <div class='form-group'>
+                {{errors.username}}    
+                <label for='username'>Username</label><input type='text' name="username" id='username'>
+            </div>
+            <div class='form-group'>
+                {{errors.password}}
+                <label for='password'>Password</label><input type='password' name="password" id='password'>
+            </div>
+            <div class='form-group'>
+                {{errors.confirmpw}}
+                <label for='confirmpw'>Confirm your password</label><input type='password' name="confirmpw">
+            </div>
+            <div class='form-group'>
+                <input type="submit" name="Register" value='Register'>
+            </div>
         </form>
     </div>
     <div id="login">
-        <h3>Login</h3>
+        <h5 class='display-4 text-success'>Login</h5>
         <form action='/login/loginval/' method='post'>
             {% csrf_token %}
-        {{errors.loginusername}}
-            <p>Username: <input type='text' name="username"></p>
-        {{errors.loginpassword}}
-        <p>Password: <input type='password' name="password"></p>
-        <input type="submit" name="Login">
+            <div class='form-group'>
+                {{errors.loginusername}}
+                <label for='loginusername' >Username</label><input type='text' name="username" id='loginusername'>
+            </div>
+            <div class='form-group'>
+                {{errors.loginpassword}}
+                <label for='loginpassword'>Password</label><input type='password' name="password" id='loginpassword'>
+            </div>
+            <div class='form-group'>
+                <input type="submit" name="Login" value='Login'>
+            </div>
         </form>
     </div>
+</div>
 </body>
 </html>

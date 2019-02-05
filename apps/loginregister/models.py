@@ -11,10 +11,16 @@ class College(models.Model):
     def formatcollege(self):
         self.name=self.name.replace("_"," ")
         return self
+    def __repr__(self):
+        return ("College: {}".format(self.name))
+
 
 class Dept(models.Model):
     name=models.CharField(max_length=255)
     college=models.ForeignKey(College,on_delete='cascade',related_name='departments')
+    def __repr__(self):
+        return ("DEPT: {}".format(self.name))
+
 
 class User(models.Model):
     first_name=models.CharField(max_length=50)
@@ -23,9 +29,7 @@ class User(models.Model):
     email=models.CharField(max_length=50)
     colleges=models.ManyToManyField(College,related_name='users')
     permissions=models.ManyToManyField(Dept,through='Permission',related_name='users')
-    role=models.CharField(max_length=20)
     passwordhash=models.CharField(max_length=255)
-    accesslevel=models.IntegerField(default=1)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     def __repr__(self):
@@ -35,6 +39,7 @@ class Permission(models.Model):
     dept = models.ForeignKey(Dept, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     level = models.IntegerField(default=0)
+    levelname = models.CharField(max_length=25)
 
 class ValidationManager(models.Manager):
     def validatereg(self, postData):

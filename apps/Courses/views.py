@@ -3,60 +3,62 @@ from apps.loginregister.models import *
 from apps.Courses.models import *
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 def home(request):
-    if 'loggedid' not in request.session:
-        return redirect('/login/')
-    else:
-        co=College.objects.values('name','departments__name','departments__courses__course_name','departments__courses__course_number','departments__courses__credits','departments__courses__id','departments__courses__prereqs__course_number')
-        alldepts=Dept.objects.all()
-        alldeptinfo=[]
-        for eachdept in alldepts:
-            eachdeptcourses=[]
-            for c in eachdept.courses.all():
-                pqs=[]
-                for k in c.prereqs.all():
-                    pqs.append(k)
-                eachdeptcourses.append({'course_name':c.course_name,'course_number':c.course_number, 'id':c.id,'prereqs':pqs,'credits':c.credits})
-            alldeptinfo.append({'deptname':eachdept.name,'courses':eachdeptcourses})    
+    x={}
+    xp=[]
+    if 'loggedid' in request.session:
         x=User.objects.get(id=request.session['loggedid'])
-        context={'newdict':co,'user':x, 'admin':x.accesslevel, 'coursesbydept':alldeptinfo, 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
-        return render (request,'courseshome.html',context)
+        xp=Permission.objects.filter(user=x)
+    c=College.objects.values('name','departments__name','departments__courses__course_name','departments__courses__course_number','departments__courses__credits','departments__courses__id','departments__courses__prereqs__course_number')
+    alldepts=Dept.objects.all()
+    return render (request,'courseshome.html',{'allcourses':c,'user':x,'permissions':xp})
 
 def viewcourse(request,idnumber):
-    x=User.objects.get(id=request.session['loggedid'])
+    x={}
+    if 'loggedid' in request.session:
+        x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
     z=y.prereqs.all()
     w=y.equivalencies.all()
     return render (request,'courseinfo.html',{'user':x,'course':y, 'prereqs':z, 'equivalencies':w})
 
 def addcourseform(request):
+    if 'loggedid' not in request.session:
+        return redirect('/login/')
     x=User.objects.get(id=request.session['loggedid'])
-    d=x.departments.all()
-    if x.accesslevel<7:
-        return HttpResponse('YOU ARE NOT ALLOWED TO ACCESS THIS AREA')
+    d=Permission.objects.filter(user=x,level__gt=2).values('dept__name','dept__college__name','dept_id')
     errors=request.session['errors']
     context={'user':x,'availdepts':d,'prereqs':Course.objects.all(),'errors':errors}
     return render(request,'addcourse.html',context)
 
 def addcourse(request):
     if request.method=='POST':
+        if 'loggedid' not in request.session:
+            return redirect('/login/')
         x=User.objects.get(id=request.session['loggedid'])
-        if x.accesslevel<7:
-            return HttpResponse('YOU ARE NOT ALLOWED TO ACCESS THIS AREA')
+        y=Dept.objects.get(id=request.POST['deptid'])        
+        try:
+            p=Permission.objects.get(user=x,dept=y)
+        except ObjectDoesNotExist:
+            p=False
+        if not p:
+            return HttpResponse('You are not important enough to create a course in this department')
         else:
             validator=CourseValidator()
             errors=validator.validatecourse(request.POST)
             if len(errors)>0:
                 request.session['errors']=errors
-                return redirect('/courses/add')
+                return redirect(reqest.POST['newpath'])
             else:
-                z=Dept.objects.get(id=request.POST['deptid'])
-                y=Course.objects.create(college=z.college, department=z,created_by=x,course_name=request.POST['course_name'],course_number=request.POST['course_number'],credits=request.POST['credits'],course_description=request.POST['course_description'],course_outcomes=request.POST['course_outcomes'],course_URL=request.POST['course_url'])
+                y=Course.objects.create(college=y.college, department=y,created_by=x,course_name=request.POST['course_name'],course_number=request.POST['course_number'],credits=request.POST['credits'],course_description=request.POST['course_description'],course_outcomes=request.POST['course_outcomes'],course_URL=request.POST['course_url'])
                 y.save()
                 return redirect('/courses/')
 
 def editcourse(request,idnumber):
+    if 'loggedid' not in request.session:
+        return redirect('/login/')
     x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
     try:
@@ -66,12 +68,14 @@ def editcourse(request,idnumber):
     if not p:
         return HttpResponse('YOU ARE NOT ALLOWED TO ACCESS THIS AREA.')
     else:
-        if p.level>=1:
+        if p.level>=2:
             return render(request,'editcourse.html',{'user':x,"course":y, "prereqsselected":y.prereqs.all(), "prereqsother":Course.objects.filter(college=y.college).exclude(id=y.id)})
         else:
             return HttpResponse('YOU ARE NOT ALLOWED TO ACCESS THIS AREA.')
 def updatecourse(request,idnumber):
     if request.method=='POST':
+        if 'loggedid' not in request.session:
+            return redirect('/login/')
         x=User.objects.get(id=request.session['loggedid'])
         request.session['errors']={}
         validator=CourseValidator()
@@ -96,6 +100,8 @@ def updatecourse(request,idnumber):
     return redirect('/courses/')
 
 def deletecheck(request,idnumber):
+    if 'loggedid' not in request.session:
+        return redirect('/login/')
     x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
     try:
@@ -110,6 +116,8 @@ def deletecheck(request,idnumber):
         else:
             return HttpResponse("Please talk to your administrator to get this course deleted")
 def deletecourse(request,idnumber):
+    if 'loggedid' not in request.session:
+        return redirect('/login/')
     if request.method=='POST':
         x=User.objects.get(id=request.session['loggedid'])
         y=Course.objects.get(id=idnumber)
@@ -123,6 +131,9 @@ def deletecourse(request,idnumber):
     return redirect('/courses/')
 
 def viewtreq(request,idnumber):
+    x={}
+    if 'loggedid' not in request.session:
+        return redirect('/login/')
     x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
     dptmt=Dept.objects.exclude(college=y.college)
@@ -130,6 +141,8 @@ def viewtreq(request,idnumber):
     return render(request,'edittreq.html',{'user':x,'course':y,'availdepts':dptmt, 'availcourses':z})
 
 def edittreq(request,idnumber):
+    if 'loggedid' not in request.session:
+        return redirect('/login/')
     x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
     if request.method =='POST':
@@ -150,24 +163,21 @@ def edittreq(request,idnumber):
     return redirect ('/courses/')
 
 def treqtable(request):
-    x=User.objects.get(id=request.session['loggedid'])
+    x={}
+    if 'loggedid' not in request.session:
+        pass
+    else:
+        x=User.objects.get(id=request.session['loggedid'])
     if 'treqtablecollegeid1' not in request.session:
-        yourcollege=College.objects.first()
+        y=College.objects.first()
     else:
-        yourcollege=College.objects.get(id=request.session['treqtablecollegeid1'])
+        y=College.objects.get(id=request.session['treqtablecollegeid1'])
     if 'treqtablecollegeid2' not in request.session:
-        othercollege=College.objects.last()
-        othercollegeid=othercollege.id
+        z=College.objects.last()
     else:
-        othercollege=College.objects.get(id=request.session['treqtablecollegeid2'])
-    courses=yourcollege.courses.all().order_by('course_number')
-    courseinfo=[]
-    for i in courses:
-        equils=[]
-        for k in i.equivalencies.filter(college=othercollege):
-            equils.append(k)
-        courseinfo.append({'course_name':i.course_name,'id':i.id,'course_number':i.course_number,'equilcourses':equils})
-    return render(request,'treqtable.html',{'colleges':College.objects.all(),'user':x, 'yourcollege':yourcollege.formatcollege,'othercollege':othercollege.formatcollege,'yourcollegecourses':courseinfo})
+        z=College.objects.get(id=request.session['treqtablecollegeid2'])
+    courseinfo=y.courses.values('course_name','equivalencies__course_name','course_number','id','equivalencies__course_number','equivalencies__id').filter(Q(equivalencies__college=z) | Q(equivalencies__isnull=True)).order_by('course_number')
+    return render(request,'treqtable.html',{'colleges':College.objects.all(),'user':x, 'yourcollege':y.formatcollege,'othercollege':z.formatcollege,'yourcollegecourses':courseinfo})
 
 def treqtablegenerate(request):
     if request.method=='POST':

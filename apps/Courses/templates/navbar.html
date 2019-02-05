@@ -8,31 +8,44 @@
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand-md navbar-dark bg-success fixed-top">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/courses/">Home <span class="sr-only">(current)</span></a>
+            <li class="nav-item active ">
+                <a class="nav-link" href="/courses/treqtable/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Course Options</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <a class="dropdown-item" href="/courses/">All courses</a>
+                    {% if user %}
                     <a class="dropdown-item" href="/courses/add/">Add a course to the catalog</a>
+                    {% endif %}
                     <a class="dropdown-item" href="/courses/treqtable/">View Transfer Equivalencies</a>
                 </div>
             </li>
+            {% if user %}
+            <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Permission Options</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <a class="dropdown-item" href="/login/profile/{{user.id}}">My Roles</a>
+                        <a class="dropdown-item" href="/allow/">All Roles</a>
+                    </div>
+                </li>
+            {% endif %}
         </ul>
-        <h3 class='navbar-md px-4'>College and University Transfer Coursebook of Oregon</h3>
+        <h3 class='navbar-md text-white px-4'>College and University Transfer Coursebook of Oregon</h3>
         <ul class="nav justify-content-end">
             <li class="nav-item dropdown">
-                <a class="btn btn-secondary dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</a>
+                    {% if user %}
+                <a class="btn btn-info dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <a class="dropdown-item" href="/login/profile/{{user.id}}">My Profile</a>
                     <a class="dropdown-item" href="/login/logout/">Logout</a>
+                    {% endif %}
                 </div>
             </li>
         </ul>

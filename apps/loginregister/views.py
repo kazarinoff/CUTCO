@@ -3,6 +3,8 @@ from apps.loginregister.models import *
 from datetime import datetime
 import bcrypt
 from apps.Courses.models import *
+from django.core.exceptions import ObjectDoesNotExist
+
 
 def index(request):
     if 'loggedid' in request.session:
@@ -20,12 +22,27 @@ def regval(request):
         if not len(errors):
             pwd=bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
             pwdcrpt=pwd.decode('utf-8')
-            print(pwdcrpt)
             x=User.objects.create(first_name=request.POST['first_name'],last_name=request.POST['last_name'],email=request.POST['email'], username=request.POST['username'], passwordhash=pwdcrpt)
-            x.colleges.add(College.objects.get(name=str(request.POST['college'])))
+            if request.POST['college'] != 'atlarge':
+                c=College.objects.get(id=request.POST['college'])
+                x.colleges.add(c)
+                d=c.departments.all()
+                for dp in d:
+                    q=Permission.objects.create(user=x,dept=dp,level=request.POST['role'])
+                    if int(request.POST['role'])==10:
+                        q.levelname='God'
+                    elif int(request.POST['role'])==8:
+                        q.levelname='Administrator'
+                    elif int(request.POST['role'])==5:
+                        q.levelname='Faculty'
+                    elif int(request.POST['role'])==1:
+                        q.levelname='Student'
+                    else:
+                        q.levelname='At large'
+                    q.save()
             x.save()
             request.session['loggedid']=User.objects.last().id
-            return redirect('/courses/')
+            return redirect('/courses/treqtable/')
         else:
             request.session['errors']=errors
             return redirect('/login/')
@@ -38,7 +55,7 @@ def loginval(request):
         errors= validator.validatelogin(request.POST)
         if not len(errors):
             request.session['loggedid']=User.objects.get(username=request.POST['username']).id
-            return redirect ('/courses/')
+            return redirect ('/courses/treqtable/')
         else:
             request.session['errors']=errors
     return redirect('/login/')
@@ -50,7 +67,7 @@ def logout(request):
 def showuser(request,uid):
     x=User.objects.get(id=request.session['loggedid'])
     y=User.objects.get(id=uid)
-    p=Permission.objects.filter(user=x).values('level','dept__name','dept__college__name')
+    p=Permission.objects.filter(user=x).values('levelname','dept__name','dept__college__name')
     if x==y:
         buttons=True
     else:
@@ -61,7 +78,7 @@ def edituser(request,uid):
     if 'errors' not in request.session:
         request.session['errors']={}
     x=User.objects.get(id=request.session['loggedid'])
-    context={'errors':request.session['errors'], 'user':x, 'admin':x.accesslevel, 'courses':Course.objects.all(), 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
+    context={'errors':request.session['errors'], 'user':x, 'courses':Course.objects.all(), 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
     return render (request,'useredit.html',context)
 
 def updateuser(request):

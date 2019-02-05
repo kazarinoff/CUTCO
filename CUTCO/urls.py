@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from apps.loginregister import views
+from apps.Courses import views
 
 urlpatterns = [
     path('login/', include('apps.loginregister.urls')),
     path('courses/', include('apps.Courses.urls')),
-    path('',views.index, name='mainredirect'),
+    path('',views.treqtable, name='mainredirect'),
     path('allow/', include('apps.permissions.urls'))
 ]

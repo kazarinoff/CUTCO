@@ -3,8 +3,9 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('',views.permissionsedit, name='home'),
+    path('',views.permissionsindex, name='home'),
     path('add',views.permissionsadd,name='add'),
-    path('departments/<did>/index',views.permissionsdeptadd,name='addbydept'),
-    path('update',views.permissionsupdate,name='update')
+    path('departments/<did>/index',views.permissionsdeptindex,name='addbydept'),
+    path('update',views.permissionsupdate,name='update'),
+    path('<pid>/delete',views.permissionsdelete,name='delete')
 ]

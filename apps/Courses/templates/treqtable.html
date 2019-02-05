@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>CUTCO Add a Course</title>
+    <title>CUTCO Transfer Courses</title>
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-JuAGGg3c8UPrWdf0N8ZPJyOHkACruI9+mbl0C+H6XSYOqv9xIdiUSKehRyA8jUol" crossorigin="anonymous"></head>
 <style>
 table, th, td{
@@ -41,15 +41,20 @@ table, th, td{
             <th>{{othercollege.name}} Courses</th>
             <th>Course Number</th>
         </tr>
-        {% for h in yourcollegecourses %}
+        {% regroup yourcollegecourses by course_name as coursebook %}
+        {% for h in coursebook %}
         <tr>
-            <td><a href='/courses/{{h.id}}/'>{{h.course_name}}</a></td>
-            <td><a href='/courses/{{h.id}}/'>{{h.course_number}}</a></td>
-            <td>{% for k in h.equilcourses %}
-                <a href='/courses/{{k.id}}/'>{{k.course_name}}</a><br>{% endfor %}
+            <td><a href='/courses/{{h.list.0.id}}/'>{{h.list.0.course_name}}</a></td>
+            <td><a href='/courses/{{h.list.0.id}}/'>{{h.list.0.course_number}}</a></td>
+            <td>{% if h.list.0.equivalencies__id %}
+                {% for k in h.list %}
+                <a href='/courses/{{k.equivalencies__id}}/'>{{k.equivalencies__course_name}}</a><br>{% endfor %}
+                {% endif %}
             </td>
-            <td>{% for k in h.equilcourses %}
-                <a href='/courses/{{k.id}}/'>{{k.course_number}}</a><br>{% endfor %}
+            <td>{% if h.list.0.equivalencies__id %}
+                {% for k in h.list %}
+                <a href='/courses/{{k.equivalencies__id}}/'>{{k.equivalencies__course_number}}</a><br>{% endfor %}
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

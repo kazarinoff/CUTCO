@@ -18,6 +18,9 @@ class Course(models.Model):
     def formatcourse(self):
         self.course_name=self.course_name.replace("_"," ")
         return self
+    def __repr__(self):
+        return ("Course: {}".format(self.course_name))
+    
 
 class Degree(models.Model):
     name=models.CharField(max_length=255)

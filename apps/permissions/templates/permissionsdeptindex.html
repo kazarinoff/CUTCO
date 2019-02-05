@@ -12,7 +12,7 @@
 
     <h1>{{dept.name}}</h1>
     <h3>Add a user to this department</h3>
-    <table>
+    <table class='table table-responsive-lg table-bordered table-hover'>
         <tr>
             <th>User</th>
             <th>Username</th>
@@ -23,25 +23,31 @@
                 <td>{{ u.first_name }} {{ u.last_name}}</td>
                 <td>{{u.username}}</td>
                 <td>
+                    {% if accesslevel.level >= 5 %}
                     <form method='post' action='/allow/add'>
                         {% csrf_token %}
                         <select name='level'>
-                            <option value='1'>Student</option>
-                            <option value='5'>Faculty</option>
-                            <option value='8'>Administrator</option>
-                            <option value='10'>God</option>
+                                <option value='1'>Student</option>
+                                {% if accesslevel.level >= 8 %}
+                                <option value='5'>Faculty</option>
+                                {% endif %}
+                                {% if accesslevel.level == 10 %}
+                                <option value='8'>Administrator</option>
+                                <option value='10'>God</option>
+                                {% endif %}
                         </select>
                         <input type='hidden' name='userid' value='{{u.id}}'>
                         <input type='hidden' name='deptid' value='{{dept.id}}'>
                         <input type='hidden' value='{{request.path}}' name='nextpath'>
-                        <input type='submit' value='Add Role'>
+                        <input type='submit' class value='Add Role'>
                     </form>
+                    {% endif %}
                     </td>
             </tr>
         {% endfor %}
     </table>
     <h3>Existing Department Users</h3>
-    <table>
+    <table class='table table-responsive-lg table-bordered table-hover'>
         <tr>
             <th>User</th>
             <th>Username</th>
@@ -52,20 +58,35 @@
             <tr>
                 <td>{{ u.user.first_name }} {{ u.user.last_name}}</td>
                 <td>{{u.user.username}}</td>
-                <td>{{u.level}}</td>
+                <td>{{u.levelname}}</td>
                 <td>
-                    <form method='post' action='/allow/update'>
+                    {% if accesslevel.level > u.level or accesslevel.level == 10 %}
+                    <form style='display:inline-block' method='post' action='/allow/update'>
                         {% csrf_token %}
                         <select name='level'>
                             <option value='1'>Student</option>
+                            {% if accesslevel.level >= 8 %}
                             <option value='5'>Faculty</option>
+                            {% endif %}
+                            {% if accesslevel.level == 10 %}
                             <option value='8'>Administrator</option>
                             <option value='10'>God</option>
+                            {% endif %}
                         </select>
                         <input type='hidden' name='userid' value='{{u.user_id}}'>
                         <input type='hidden' name='deptid' value='{{u.dept_id}}'>
-                        <input type='submit' value='Update Role'>
+                        <input type='hidden' name='nextpath'value={{request.path}}>
+                        <input type='submit' class value='Update Role'>
+                    {% endif %}
                     </form>
+                    {% if accesslevel.level == 10 %}
+                    <form style='display:inline-block' method='post' action='/allow/{{u.id}}/delete'>
+                        {% csrf_token %}
+                        <input type='hidden' name='permissionid' value='{{u.id}}'>
+                        <input type='hidden' name='nextpath'value={{request.path}}>
+                        <input type='submit' class value='Delete Role'>
+                    </form>
+                    {% endif %}
                     </td>
             </tr>
         {% endfor %}

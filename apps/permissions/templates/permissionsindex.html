@@ -10,18 +10,17 @@
 </head>
 <body>
 {% include 'navbar.html' %}
-<h1>You: {{ user.username}}</h1>
-<h1>some more text to space it because bootstrap is being dumb</h1>
+<h1>You: {{ user.username}} </h1>
 {% regroup newdict by name as bycollege %}
     {% for x in bycollege %}
-        <h1>College Name: {{x.grouper}}</h1>
+        <h1>{{x.grouper}}</h1>
         {% regroup x.list by departments__name as bydept %}
         {% for y in bydept %}
-            <h5>Department Name: {{ y.grouper }}</h5>
-            <a href='/allow/departments/{{y.list.0.departments__id}}/index' class='badge badge-primary'>Add users to this department</a>
+            <h5>Department: <a href='/allow/department/{{y.list.0.departments__id}}/'>{{ y.grouper }}</a> <a href='/allow/departments/{{y.list.0.departments__id}}/index' class='badge badge-primary'>Add others to this department</a>
+            </h5>
             <table class='table table-responsive-lg table-bordered table-hover'>
-                <tr>
-                    <th>User</th>
+                <tr class='table-primary'>
+                    <th>Current Users</th>
                     <th>Username</th>
                     <th>Level</th>
                     <th>Actions</th>
@@ -30,8 +29,8 @@
                     {% for z in y.list %}
                         <tr>
                             <td>{{ z.departments__users__first_name }} {{ z.departments__users__last_name }}</td>
-                            <td>{{ z.departments__users__username }}</td>
-                            <td>{{ z.departments__users__permission__level }}</td>
+                            <td><a href='/login/profile/{{ z.departments__users__id }}/'>{{ z.departments__users__username }}</a></td>
+                            <td>{{ z.departments__users__permission__levelname }}</td>
                             <td>
                                 <form method='post' action='/allow/update'>
                                     {% csrf_token %}
@@ -44,7 +43,7 @@
                                     </select>
                                         <input type='hidden' name='userid' value='{{z.departments__users__id}}'>
                                     <input type='hidden' name='deptid' value='{{z.departments__id}}'>
-                                    <input type='submit' value='Update Role'>
+                                    <input type='submit' value='Update Role' class=''>
                                 </form>
                                 </td>
                         </tr>
@@ -54,10 +53,11 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td><button>add some users here</button></td>
+                        <td></td>
                     </tr>
                 {% endif %}
             </table>
+            <br>
         {% endfor %}
         <br>
     {% endfor %}   

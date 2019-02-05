@@ -18,7 +18,7 @@
 {% if permissions %}
     <ul>
     {% for i in permissions %}
-        <li>{{i.dept__college__name}}, {{i.dept__name}}, {{i.level}}</li>
+        <li>{{i.dept__name}}, {{i.dept__college__name}} - {{i.levelname}}</li>
     {% endfor %}
     </ul>
 {% else %}

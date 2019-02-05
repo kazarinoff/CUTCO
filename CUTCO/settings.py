@@ -12,21 +12,22 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 # to do:
 # get settings_secret to work
-# edit courseblock style
+# (check) edit courseblock style
 # email capability:
 #     registration/login/reset password
 #     updates
 #     asking for security clearance
-# security clearance
+# (check) security clearance
 #     user levels- 10-SUadmin, 9-4year admins, 8-2year admins, 7-teachers, 6-students/public?
 #     ability to edit clearance level of users from admins
 # registration setup?
 #     maybe validate w/ correct email addy
 #     maybe ask for clearance from appropriate admins
-# make treqtable look pretty and fully functional
+# (check) make treqtable look pretty and fully functional
 # build out coursebook for 3 colleges
-# optimize treqtable queries
-# optimize course edit queries
+# (check) optimize treqtable queries
+# (check) optimize course edit queries
+#  reorganize and name things for ease
 
 
 import os

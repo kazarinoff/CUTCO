@@ -21,6 +21,7 @@
         {{errors.username}}    
         <p>Username: <input type='text' name="username" value="{{user.username}}"> </p>
         <input type='hidden' name='nextpath' value='{{request.path}}'>
+        <input type='hidden' name='userid' value='{{user.id}}'>
         <p><input type="submit" name="Edit"></p>
     </form>
 </body>

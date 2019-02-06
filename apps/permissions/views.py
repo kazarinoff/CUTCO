@@ -51,8 +51,16 @@ def permissionsdeptindex(request,did):
 
 def permissionsupdate(request):
     if request.method=='POST':
-        q=Permission.objects.get(user_id=request.POST['userid'],dept_id=request.POST['deptid'])
-        q.level=request.POST['level']
+        x=User.objects.get(id=request.session['loggedid'])
+        d=Dept.objects.get(id=request.POST['deptid'])
+        try:
+            p=Permission.objects.get(user=x,dept=d)
+        except ObjectDoesNotExist:
+            return HttpResponse("Error, you are unworthy")
+        if p.level <= int(request.POST['level']):
+            return HttpResponse('Error')
+        q=Permission.objects.get(user_id=request.POST['userid'],dept=d)
+        q.level=int(request.POST['level'])
         if q.level==10:
             q.levelname='God'
         elif q.level==8:

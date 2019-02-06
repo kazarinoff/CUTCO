@@ -16,8 +16,9 @@
         <h1>{{x.grouper}}</h1>
         {% regroup x.list by departments__name as bydept %}
         {% for y in bydept %}
-            <h5>Department: <a href='/allow/department/{{y.list.0.departments__id}}/'>{{ y.grouper }}</a> <a href='/allow/departments/{{y.list.0.departments__id}}/index' class='badge badge-primary'>Add others to this department</a>
-            </h5>
+            <h5>Department: <a href='/allow/departments/{{y.list.0.departments__id}}/index'>{{ y.grouper }}</a></h5>
+            <a style='margin-top:15px;margin-bottom:15px;' href='/allow/departments/{{y.list.0.departments__id}}/index' class='badge badge-primary'>Modify Department Users</a>
+            
             <table class='table table-responsive-lg table-bordered table-hover'>
                 <tr class='table-primary'>
                     <th>Current Users</th>
@@ -29,7 +30,7 @@
                     {% for z in y.list %}
                         <tr>
                             <td>{{ z.departments__users__first_name }} {{ z.departments__users__last_name }}</td>
-                            <td><a href='/login/profile/{{ z.departments__users__id }}/'>{{ z.departments__users__username }}</a></td>
+                            <td><a href='/login/profile/{{ z.departments__users__id }}'>{{ z.departments__users__username }}</a></td>
                             <td>{{ z.departments__users__permission__levelname }}</td>
                             <td>
                                 <form method='post' action='/allow/update'>

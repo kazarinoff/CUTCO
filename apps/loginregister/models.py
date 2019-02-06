@@ -40,6 +40,8 @@ class Permission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     level = models.IntegerField(default=0)
     levelname = models.CharField(max_length=25)
+    def __repr__(self):
+        return ("Permission of: {}".format(self.dept.name)+' and '+format(self.user.username)+' at level '+format(self.level)+" , "+format(self.levelname))
 
 class ValidationManager(models.Manager):
     def validatereg(self, postData):

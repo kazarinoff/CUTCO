@@ -96,5 +96,5 @@ def updateuser(request):
         if x.username!=request.POST['username']:
             x.username=request.POST['username']
         x.save()
-        return redirect(request.POST['nextpath'])
+        return redirect('/login/profile/'+request.POST['userid'])
     return redirect('/login/')

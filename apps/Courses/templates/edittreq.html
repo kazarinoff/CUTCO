@@ -9,7 +9,7 @@
 
 <body>
 {% include 'navbar.html' %}
-    <h1>Welcome, {{user.username}}</h1>
+    <h1>spacer</h1>
     <div id="transfers">
             <h3>Set equivalent courses to {{course.course_name}} from other institutions</h3>
                 <form action='/courses/{{course.id}}/treqedit', method="POST">
@@ -46,10 +46,5 @@
             {% endif %}
 
     </div>
-    <br>
-
-    <a href="/courses/">back to course page</a> | 
-    <a href="/login/logout/">logout</a>
-
 </body>
 </html>

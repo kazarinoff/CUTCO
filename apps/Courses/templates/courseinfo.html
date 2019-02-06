@@ -10,27 +10,41 @@
 <body>
 {% include 'navbar.html' %}
     <h1>Welcome, {{user.username}}</h1>
-    <div>
-        <h3>{{course.course_name}}</h3>
-            <p>College: {{course.college.name}}</p>
+    <div class='row'>
+    <div class='col-9'>
+    <div class='card mb-6'>
+        <h3 class='card-header'>{{course.course_name}}</h3>
+            <div class='card-body'><p>College: {{course.college.name}}</p>
             <p>Department: {{course.department.name}}</p>
-            <p>Course Number: {{course.course_number}}</p>
+            <p>Number: {{course.course_number}}</p>
             <p>Credits: {{course.credits}}</p>
-            <p>Prerequisites: 
+            <em class='card-text'>URL: {{course_url}}</em>
+            </div>
+            <div class='card-body'>
+            <h5 class='card-header bg-light'>Prerequisites:</h5>
+            <ul class="list-group list-group-flush">
                 {% for x in prereqs %}
-                {{x.course_name}}
+                <li class='list-group-item'>{{x.course_name}}</li>
                 {% endfor %}
-                <p>Course Description:{{course.course_description}}</p>
-            <p>Course-Outcomes: {{course.course_outcomes}}
-            <p>Course URL: {{course_url}}</p>
-            <p>Equivalent Courses: </p>
+            </ul>
+                </div>
+            <div class='card-body'>
+                <p class='card-text'>Description: {{course.course_description}}</p>
+            </div>
+            <div class='card-body'>
+            <p class='card-text'>Outcomes: {{course.course_outcomes}}
+            </div>
+            <h5 class='card-header bg-light'>Equivalent Courses:</h5>
+            <ul class='list-group-flush'>
             {% for h in equivalencies %}
-            <p>{{h.course_name}}</p>
+            <li class='list-group-item'>{{h.course_name}}</li>
             {% endfor %}
+            </ul>
             {% if user.accesslevel >= 7 %}
             <a href="/courses/{{course.id}}/edit/" class="badge badge-secondary">Edit Course</a> | <a href="/courses/{{course.id}}/delete/" class="badge badge-secondary">Delete Course</a> | <a href="/courses/{{course.id}}/treq" class="badge badge-secondary">Set Transfer EQs</a>
             {% endif %}
-
+</div>
+</div>
     </div>
 </body>
 </html>

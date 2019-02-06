@@ -28,26 +28,34 @@
                 </tr>
                 {% if y.list.0.departments__users__permission__level %}
                     {% for z in y.list %}
+                    {% if z.departments__id == z.departments__users__permission__dept_id %}
                         <tr>
                             <td>{{ z.departments__users__first_name }} {{ z.departments__users__last_name }}</td>
                             <td><a href='/login/profile/{{ z.departments__users__id }}'>{{ z.departments__users__username }}</a></td>
                             <td>{{ z.departments__users__permission__levelname }}</td>
                             <td>
+                                {% if z.departments__id in permissions.faculty or z.departments__id in permissions.god or z.departments__id in permissions.administrator %}
                                 <form method='post' action='/allow/update'>
                                     {% csrf_token %}
                                     <input type='hidden' value='{{request.path}}' name='nextpath'>
                                     <select name='level' value='{{z.departments__users__permission__level}}'>
                                         <option value='1'>Student</option>
+                                        {% if z.departments__id in permissions.god or z.departments__id in permissions.administrator %}
                                         <option value='5'>Faculty</option>
+                                        {% endif %}
+                                        {% if z.departments__id in permissions.god %}
                                         <option value='8'>Administrator</option>
                                         <option value='10'>God</option>
+                                        {% endif %}
                                     </select>
                                         <input type='hidden' name='userid' value='{{z.departments__users__id}}'>
                                     <input type='hidden' name='deptid' value='{{z.departments__id}}'>
                                     <input type='submit' value='Update Role' class=''>
                                 </form>
+                                {% endif %}
                                 </td>
                         </tr>
+                    {% endif %}
                     {% endfor %}
                 {% else %}
                     <tr>

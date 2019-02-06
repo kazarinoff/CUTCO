@@ -9,36 +9,40 @@
 <body>
 {% include 'navbar.html' %}
     <h1>Welcome, {{user.username}}</h1>
-    <div>
-        <h3>Add a Course</h3>
-        <form action="/courses/include/", method="POST">
+    <div class='row'>
+    <div class='col-9'>
+        <div class='card mb-6'>
+        <h3 class='card-header'>Add a Course to the {{college.name}} Catalog</h3>
+        <form class='card-body' action="/courses/include/", method="POST">
             {% csrf_token %}
             <input type='hidden' name='nextpath' value='{{ request.path }}'>
-            <p>College & Department: <select name='deptid'>
-                {% for i in availdepts %}
-            <option value="{{i.dept_id}}">{{i.dept__college__name}}, {{i.dept__name}}</option>
+            <p>Department: <select name='deptid'>
+                {% for i in depts %}
+            <option value="{{i.dept_id}}">{{i.dept__name}}</option>
             {% endfor %}
             </select></p>
             {{errors.course_name}}
-            <p>Course Name: <input type='text' name="course_name"></p>
+            <p>Course Name: <input type='text' size='45' name="course_name"></p>
             {{errors.course_number}}
             <p>Course Number: <input type='text' name="course_number"></p>
             {{errors.credits}}    
-            <p># of Credits: <input type="number" name="credits"> </p>
-            <p>Prerequisites: 
-                <select name="courseid" multiple>
+            <p># of Credits: <input type="text" size='10' name="credits"> </p>
+            <p>Prerequisites:</p>
+                <select name="courseid" multiple size='10' style='width:40%;'>
                     {% for i in prereqs %}
-                    <option value="{{i.id}}">{{i.course_name}}</option>
+                    <option value="{{i.id}}">{{i.course_number}}- {{i.course_name}}</option>
                     {% endfor %}
                 </select> 
             {{errors.course_description}}
                 <p>Course Description:</p>
-                <textarea name="course_description"></textarea>
+                <textarea rows='5' cols='60' name="course_description"></textarea>
             {{errors.course_outcomes}}
-            <p>Course-Outcomes: </p><textarea name="course_outcomes"></textarea>
-            <p>Course URL: <input type='text' name="course_url"></p>
+            <p>Course-Outcomes: </p><textarea rows='10' cols='60' name="course_outcomes"></textarea>
+            <p>Course URL: <input type='text' size='43' name="course_url"></p>
             <p><input type="submit" name="Add Course"></p>
         </form>
+    </div>
+    </div>
     </div>
 </body>
 </html>

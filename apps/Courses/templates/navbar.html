@@ -21,10 +21,13 @@
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Course Options</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <a class="dropdown-item" href="/courses/">All courses</a>
-                    {% if user %}
-                    <a class="dropdown-item" href="/courses/add/">Add a course to the catalog</a>
-                    {% endif %}
                     <a class="dropdown-item" href="/courses/treqtable/">View Transfer Equivalencies</a>
+                    {% if usercolleges %}
+                        <div class=dropdown-divider></div>
+                        {% for college in usercolleges %}
+                            <a class='dropdown-item' href='/courses/{{college.id}}/add'>Add course to {{college.name}}</a>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </li>
             {% if user %}
@@ -33,6 +36,13 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
                         <a class="dropdown-item" href="/login/profile/{{user.id}}">My Roles</a>
                         <a class="dropdown-item" href="/allow/">All Roles</a>
+                        {% if userdepts %}
+                        <div class=dropdown-divider></div>
+                        {% for dept in userdepts %}
+                            <a class='dropdown-item' href='/allow/departments/{{dept.id}}/index'>Roles for {{dept.college.name}}- {{dept.name}}</a>
+                        {% endfor %}
+                    {% endif %}
+
                     </div>
                 </li>
             {% endif %}
@@ -41,10 +51,12 @@
         <ul class="nav justify-content-end">
             <li class="nav-item dropdown">
                     {% if user %}
-                <a class="btn btn-info dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</a>
+                <a class="btn btn-info dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <a class="dropdown-item" href="/login/profile/{{user.id}}">My Profile</a>
                     <a class="dropdown-item" href="/login/logout/">Logout</a>
+                    {% else %}
+                    <a class="btn btn-info" href="/login" id="dropdown02">LOGIN</a>
                     {% endif %}
                 </div>
             </li>

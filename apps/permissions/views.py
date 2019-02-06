@@ -6,9 +6,22 @@ from django.core.exceptions import ObjectDoesNotExist
 from apps.Courses.models import *
 
 def permissionsindex(request):
-    x= User.objects.get(id=request.session['loggedid'])
-    cd=College.objects.values('name','departments__name','departments__id','departments__users__id','departments__users__first_name','departments__users__last_name','departments__users__username','departments__users__permission__level','departments__users__permission__levelname')
-    return render(request,'permissionsindex.html',{'user':x,'newdict':cd})
+    p={'god':[],'administrator':[],'faculty':[],'any':[]}
+
+    if 'loggedid' in request.session:
+        x= User.objects.get(id=request.session['loggedid'])
+        xc=College.objects.filter(users=x)
+        xd=Dept.objects.filter(users=x)
+        for i in Permission.objects.filter(user=x):
+            p['any'].append(i.dept_id)
+            if i.level==10:
+                p['god'].append(i.dept_id)
+            if i.level==8:
+                p['administrator'].append(i.dept_id)
+            if i.level==5:
+                p['faculty'].append(i.dept_id)
+    c=College.objects.values('name','departments__name','departments__id','departments__users__id','departments__users__first_name','departments__users__last_name','departments__users__username','departments__users__permission__level','departments__users__permission__levelname','departments__users__permission__dept_id')
+    return render(request,'permissionsindex.html',{'usercolleges':xc,'userdepts':xd,'user':x,'newdict':c,'permissions':p})
 
 def permissionsadd(request):
     if request.method=='POST':
@@ -39,7 +52,10 @@ def permissionsadd(request):
     return redirect('/courses/')
 
 def permissionsdeptindex(request,did):
-    x=User.objects.get(id=request.session['loggedid'])
+    if 'loggedid' in request.session:
+        x= User.objects.get(id=request.session['loggedid'])
+        xc=College.objects.filter(users=x)
+        xd=Dept.objects.filter(users=x)
     d=Dept.objects.get(id=did)
     try:
         p=Permission.objects.get(user=x,dept=d)
@@ -47,7 +63,7 @@ def permissionsdeptindex(request,did):
         p={}
     nu=User.objects.exclude(permissions=d).all()
     cu=Permission.objects.filter(dept=d).all()
-    return render (request, 'permissionsdeptindex.html',{'dept':d,'newusers':nu,'currentusers':cu,'user':x,'accesslevel':p})
+    return render (request, 'permissionsdeptindex.html',{'usercolleges':xc,'userdepts':xd,'dept':d,'newusers':nu,'currentusers':cu,'user':x,'accesslevel':p})
 
 def permissionsupdate(request):
     if request.method=='POST':
@@ -86,5 +102,3 @@ def permissionsdelete(request,pid):
         else:
             pd.delete()
             return redirect(request.POST['nextpath'])
-
-

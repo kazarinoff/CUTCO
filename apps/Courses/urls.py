@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('',views.home, name='home'),
-    path('add/',views.addcourseform, name='addcourseform'),
+    path('<cid>/add',views.addcourseform, name='addcourseform'),
     path('include/',views.addcourse, name='addcourse'),
     path('treqtable/',views.treqtable,name='treqtable'),
     path('treqtablegenerate/',views.treqtablegenerate, name='treqtablegenerate'),

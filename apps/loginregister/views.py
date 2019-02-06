@@ -11,7 +11,7 @@ def index(request):
         return redirect('/courses/')
     if 'errors' not in request.session:
         request.session['errors']={}
-    context={'colleges':College.objects.all(),'departments':Dept.objects.all(),'errors':request.session['errors']}
+    context={'colleges':College.objects.all(),'errors':request.session['errors']}
     return render(request,'login.html',context)
 
 def regval(request):
@@ -65,21 +65,24 @@ def logout(request):
     return redirect('/login/')
 
 def showuser(request,uid):
-    x=User.objects.get(id=request.session['loggedid'])
+    if 'loggedid' in request.session:
+        x= User.objects.get(id=request.session['loggedid'])
+        xc=College.objects.filter(users=x)
+        xd=Dept.objects.filter(users=x)
     y=User.objects.get(id=uid)
     p=Permission.objects.filter(user=x).values('levelname','dept__name','dept__college__name')
-    if x==y:
-        buttons=True
-    else:
-        buttons=False
-    return render(request,'showuser.html',{'user':x,'profileuser':y,'permissions':p,'buttons':buttons})
+    return render(request,'showuser.html',{'usercolleges':xc,'userdepts':xd,'user':x,'profileuser':y,'permissions':p})
 
 def edituser(request,uid):
     if 'errors' not in request.session:
         request.session['errors']={}
-    x=User.objects.get(id=request.session['loggedid'])
-    context={'errors':request.session['errors'], 'user':x, 'courses':Course.objects.all(), 'departments':Dept.objects.all(), 'colleges':College.objects.all()}
-    return render (request,'useredit.html',context)
+    try:
+        x=User.objects.get(id=request.session['loggedid'])
+    except ObjectDoesNotExist:
+        return HttpResponse("you can't alter this user")
+    xc=College.objects.filter(users=x)
+    xd=Dept.objects.filter(users=x)
+    return render (request,'useredit.html',{'usercolleges':xc,'userdepts':xd,'errors':request.session['errors'], 'user':x})
 
 def updateuser(request):
     validator= ValidationManager()

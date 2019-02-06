@@ -10,6 +10,12 @@
 table, th, td{
     border:1pt solid black;
     padding: 5px;
+    margin-left:15px;
+}
+label, select, input {
+    display:block;
+    margin-bottom: 15px;
+    margin-left: 15px;
 }
 </style>
 
@@ -20,19 +26,17 @@ table, th, td{
 <div class='body'>
     <form action="/courses/treqtablegenerate/" method="POST">
         {% csrf_token %}
-        <p>Your School: <select name='yourcollegeid'>
+        <label for='yourcollege'>Your School</label><select id='yourcollege' name='yourcollegeid'>
                 {% for i in colleges %}
                     <option value="{{i.id}}">{{i.name}}</option>
                 {% endfor %}
                     </select>
-        </p>
-        <p>School You're Interested In: <select name='othercollegeid'>
+        <label for='othercollege'>Moving To </label><select name='othercollegeid' id='othercollege'>
                 {% for i in colleges %}
                     <option value="{{i.id}}">{{i.name}}</option>
                 {% endfor %}
                     </select>
-        </p>
-        <p><input type="submit" name="Update" value="See needed classes"></p>
+        <label for='submit'> </label><input id='submit' type="submit" name="Update" value="Transfer Credits"></p>
     </form>
     <table>
         <tr class='table-primary'>

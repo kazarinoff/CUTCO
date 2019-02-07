@@ -38,8 +38,8 @@
                     </td>
                     <td>
                         <a href="/courses/{{course.list.0.departments__courses__id}}/" class="badge badge-secondary">Details</a> 
-                        {% if course.list.0.departments__id in permissions.any %}
-                    | <a href="/courses/{{course.list.0.departments__courses__id}}/edit/" class="badge badge-secondary">Edit Course</a> 
+                        {% if course.list.0.departments__id in permissions.administrator or  course.list.0.departments__id in permissions.god or  course.list.0.departments__id in permissions.faculty %}
+                        | <a href="/courses/{{course.list.0.departments__courses__id}}/edit/" class="badge badge-secondary">Edit Course</a> 
                         {% endif %}
                     {% if course.list.0.departments__id in permissions.administrator or  course.list.0.departments__id in permissions.god %}
                     | <a href="/courses/{{course.list.0.departments__courses__id}}/delete/" class="badge badge-secondary">Delete Course</a>

@@ -67,7 +67,7 @@ def addcourse(request):
         errors=validator.validatecourse(request.POST)
         if len(errors)>0:
             request.session['errors']=errors
-            return redirect(reqest.POST['newpath'])
+            return redirect(request.POST['nextpath'])
         y=Course.objects.create(college=y.college, department=y,created_by=x,course_name=request.POST['course_name'],course_number=request.POST['course_number'],credits=request.POST['credits'],course_description=request.POST['course_description'],course_outcomes=request.POST['course_outcomes'],course_URL=request.POST['course_url'])
         y.save()
     return redirect('/courses/')

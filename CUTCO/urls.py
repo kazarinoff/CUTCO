@@ -18,8 +18,15 @@ from django.urls import path, include
 from apps.Courses import views
 
 urlpatterns = [
+<<<<<<< HEAD
     path('login/', include('apps.loginregister.urls', namespace='loginapp')),
     path('courses/', include('apps.Courses.urls',namespace='courses')),
     path('',views.treqtable, name='mainredirect'),
     path('allow/', include('apps.permissions.urls',namespace='permissions'))
+=======
+    path('cutco/login/', include('apps.loginregister.urls',namespace='loginapp'),
+    path('cutco/courses/', include('apps.Courses.urls',namespace='courses')),
+    path('',views.treqtable, name='mainredirect'),
+    path('cutco/allow/', include('apps.permissions.urls',namespace='permissions'))
+>>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb
 ]

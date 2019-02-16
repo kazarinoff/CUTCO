@@ -2,7 +2,11 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
+<<<<<<< HEAD
 app_name ='courses'
+=======
+app_name = 'courses'
+>>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb
 
 urlpatterns = [
     path('',views.home, name='home'),

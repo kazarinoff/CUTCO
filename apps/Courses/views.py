@@ -40,7 +40,7 @@ def viewcourse(request,idnumber):
 
 def addcourseform(request,cid):
     if 'loggedid' not in request.session:
-        return redirect('/login/')
+        return redirect('loginapp:index')
     x=User.objects.get(id=request.session['loggedid'])
     xc=College.objects.filter(users=x)
     xd=Dept.objects.filter(users=x)
@@ -55,7 +55,7 @@ def addcourseform(request,cid):
 def addcourse(request):
     if request.method=='POST':
         if 'loggedid' not in request.session:
-            return redirect('/login/')
+            return redirect('loginapp:index')
         x=User.objects.get(id=request.session['loggedid'])
         y=Dept.objects.get(id=request.POST['deptid'])        
         try:
@@ -70,7 +70,7 @@ def addcourse(request):
             return redirect(request.POST['nextpath'])
         y=Course.objects.create(college=y.college, department=y,created_by=x,course_name=request.POST['course_name'],course_number=request.POST['course_number'],credits=request.POST['credits'],course_description=request.POST['course_description'],course_outcomes=request.POST['course_outcomes'],course_URL=request.POST['course_url'])
         y.save()
-    return redirect('/courses/')
+    return redirect('home')
 
 def editcourse(request,idnumber):
     if 'loggedid' not in request.session:
@@ -90,12 +90,12 @@ def editcourse(request,idnumber):
 def updatecourse(request,idnumber):
     if request.method=='POST':
         if 'loggedid' not in request.session:
-            return redirect('/login/')
+            return redirect('loginapp:index')
         request.session['errors']={}
         validator=CourseValidator()
         errors=validator.validatecourse(request.POST)
         if len(errors)>0:
-            return redirect('/courses/<idnumber>/edit/')
+            return redirect('editcourse',cid=idnumber)
         y=Course.objects.get(id=int(idnumber))
         for h in y.prereqs.all():
             y.prereqs.remove(h)
@@ -109,11 +109,11 @@ def updatecourse(request,idnumber):
         y.course_url=request.POST['course_url']
         y.updated_at=datetime.now()
         y.save()
-    return redirect('/courses/')
+    return redirect('home')
 
 def deletecheck(request,idnumber):
     if 'loggedid' not in request.session:
-        return redirect('/login/')
+        return redirect('loginapp:index')
     x=User.objects.get(id=request.session['loggedid'])
     xc=College.objects.filter(users=x)
     xd=Dept.objects.filter(users=x)
@@ -126,7 +126,7 @@ def deletecheck(request,idnumber):
 
 def deletecourse(request,idnumber):
     if 'loggedid' not in request.session:
-        return redirect('/login/')
+        return redirect('loginapp:index')
     if request.method=='POST':
         x=User.objects.get(id=request.session['loggedid'])
         y=Course.objects.get(id=idnumber)
@@ -135,11 +135,11 @@ def deletecourse(request,idnumber):
         except ObjectDoesNotExist:
             return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE.')
         y.delete()
-    return redirect('/courses/')
+    return redirect('home')
 
 def viewtreq(request,idnumber):
     if 'loggedid' not in request.session:
-        return redirect('/login/')
+        return redirect('loginapp:index')
     x=User.objects.get(id=request.session['loggedid'])
     xc=College.objects.filter(users=x)
     xd=Dept.objects.filter(users=x)
@@ -153,7 +153,7 @@ def viewtreq(request,idnumber):
 
 def edittreq(request,idnumber):
     if 'loggedid' not in request.session:
-        return redirect('/login/')
+        return redirect('loginapp:index')
     x=User.objects.get(id=request.session['loggedid'])
     y=Course.objects.get(id=idnumber)
     if request.method =='POST':
@@ -190,4 +190,4 @@ def treqtablegenerate(request):
     if request.method=='POST':
         request.session['treqtablecollegeid1']=request.POST['yourcollegeid']
         request.session['treqtablecollegeid2']=request.POST['othercollegeid']
-    return redirect ('/courses/treqtable/')
+    return redirect ('/cutco/courses/treqtable/')

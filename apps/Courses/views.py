@@ -70,11 +70,7 @@ def addcourse(request):
             return redirect(request.POST['nextpath'])
         y=Course.objects.create(college=y.college, department=y,created_by=x,course_name=request.POST['course_name'],course_number=request.POST['course_number'],credits=request.POST['credits'],course_description=request.POST['course_description'],course_outcomes=request.POST['course_outcomes'],course_URL=request.POST['course_url'])
         y.save()
-<<<<<<< HEAD
     return redirect('courses:home')
-=======
-    return redirect('home')
->>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb
 
 def editcourse(request,idnumber):
     if 'loggedid' not in request.session:
@@ -99,11 +95,7 @@ def updatecourse(request,idnumber):
         validator=CourseValidator()
         errors=validator.validatecourse(request.POST)
         if len(errors)>0:
-<<<<<<< HEAD
             return redirect('editcourse', idnumber=idnumber)
-=======
-            return redirect('editcourse',cid=idnumber)
->>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb
         y=Course.objects.get(id=int(idnumber))
         for h in y.prereqs.all():
             y.prereqs.remove(h)
@@ -117,11 +109,7 @@ def updatecourse(request,idnumber):
         y.course_url=request.POST['course_url']
         y.updated_at=datetime.now()
         y.save()
-<<<<<<< HEAD
     return redirect('courses:home')
-=======
-    return redirect('home')
->>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb
 
 def deletecheck(request,idnumber):
     if 'loggedid' not in request.session:
@@ -147,11 +135,7 @@ def deletecourse(request,idnumber):
         except ObjectDoesNotExist:
             return HttpResponse('YOU ARE NOT ALLOWED TO DELETE THIS COURSE.')
         y.delete()
-<<<<<<< HEAD
     return redirect('courses:home')
-=======
-    return redirect('home')
->>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb
 
 def viewtreq(request,idnumber):
     if 'loggedid' not in request.session:
@@ -206,8 +190,4 @@ def treqtablegenerate(request):
     if request.method=='POST':
         request.session['treqtablecollegeid1']=request.POST['yourcollegeid']
         request.session['treqtablecollegeid2']=request.POST['othercollegeid']
-<<<<<<< HEAD
     return redirect ('courses:treqtable')
-=======
-    return redirect ('/cutco/courses/treqtable/')
->>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb

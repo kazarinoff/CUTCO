@@ -24,11 +24,7 @@ label, select, input {
 <h1>Welcome, {{user.username}}</h1>
 <h1>Courses that will transfer:</h1>
 <div class='body'>
-<<<<<<< HEAD
     <form action="{% url 'courses:treqtablegenerate' %}" method="POST">
-=======
-    <form action="/cutco/courses/treqtablegenerate/" method="POST">
->>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb
         {% csrf_token %}
         <label for='yourcollege'>Your School</label><select id='yourcollege' name='yourcollegeid'>
                 {% for i in colleges %}
@@ -52,28 +48,16 @@ label, select, input {
         {% regroup yourcollegecourses by course_name as coursebook %}
         {% for h in coursebook %}
         <tr>
-<<<<<<< HEAD
             <td><a href="{% url 'courses:viewcourse' h.list.0.id %}">{{h.list.0.course_name}}</a></td>
             <td><a href="{% url 'courses:viewcourse' h.list.0.id %}">{{h.list.0.course_number}}</a></td>
             <td>{% if h.list.0.equivalencies__id %}
                 {% for k in h.list %}
                 <a href="{% url 'courses:viewcourse' k.equivalencies__id %}">{{k.equivalencies__course_name}}</a><br>{% endfor %}
-=======
-            <td><a href='courses/{{h.list.0.id}}/'>{{h.list.0.course_name}}</a></td>
-            <td><a href='courses/{{h.list.0.id}}/'>{{h.list.0.course_number}}</a></td>
-            <td>{% if h.list.0.equivalencies__id %}
-                {% for k in h.list %}
-                <a href='courses/{{k.equivalencies__id}}/'>{{k.equivalencies__course_name}}</a><br>{% endfor %}
->>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb
                 {% endif %}
             </td>
             <td>{% if h.list.0.equivalencies__id %}
                 {% for k in h.list %}
-<<<<<<< HEAD
                 <a href="{% url 'courses:viewcourse' k.equivalencies__id %}">{{k.equivalencies__course_number}}</a><br>{% endfor %}
-=======
-                <a href='courses/{{k.equivalencies__id}}/'>{{k.equivalencies__course_number}}</a><br>{% endfor %}
->>>>>>> 0794d1ad94323d0a62a06f790678c0f2c847a8bb
                 {% endif %}
             </td>
         </tr>

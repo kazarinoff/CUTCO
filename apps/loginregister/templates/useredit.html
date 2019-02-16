@@ -10,7 +10,7 @@
 {% include 'navbar.html' %}
     <h1>Welcome, {{user.username}}</h1>
     <h3>Edit Your Profile</h3>
-    <form action='/login/update/' method='post'>
+    <form action="{% url 'loginapp:updateuser' %}" method='post'>
         {% csrf_token %}
         {{errors.first_name}}
         <p>First Name: <input type='text' name="first_name" value="{{user.first_name}}"></p>

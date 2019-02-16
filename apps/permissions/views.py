@@ -43,7 +43,7 @@ def permissionsadd(request):
             q.levelname='Student'
         q.save()
         return redirect(request.POST['nextpath'])
-    return redirect('/courses/')
+    return redirect('courses:home')
 
 def permissionsdeptindex(request,did):
     p,x,xc,xd = {},{},{},{}
@@ -82,7 +82,7 @@ def permissionsupdate(request):
             q.levelname='Student'
         q.save()
         return redirect(request.POST['nextpath'])
-    return redirect('/treqtable/')
+    return redirect('courses:treqtable')
 
 def permissionsdelete(request,pid):
     if request.method =='POST':
@@ -96,4 +96,4 @@ def permissionsdelete(request,pid):
             return HttpResponse('YOU ARE NOT ALLOWED DELETE THIS ROLE.')
         pd.delete()
         return redirect(request.POST['nextpath'])
-    return redirect('/courses/')
+    return redirect('courses:home')

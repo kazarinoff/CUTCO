@@ -24,7 +24,7 @@
                 <td>{{u.username}}</td>
                 <td>
                     {% if accesslevel.level >= 5 %}
-                    <form method='post' action='/allow/add'>
+                    <form method='post' action="{% url 'permissions:add' %}">
                         {% csrf_token %}
                         <select name='level'>
                                 <option value='1'>Student</option>
@@ -61,7 +61,7 @@
                 <td>{{u.levelname}}</td>
                 <td>
                     {% if accesslevel.level > u.level or accesslevel.level == 10 %}
-                    <form style='display:inline-block' method='post' action='/allow/update'>
+                    <form style='display:inline-block' method='post' action="{% url 'permissions:update' %}">
                         {% csrf_token %}
                         <select name='level'>
                             <option value='1'>Student</option>
@@ -80,7 +80,7 @@
                     {% endif %}
                     </form>
                     {% if accesslevel.level == 10 %}
-                    <form style='display:inline-block' method='post' action='/allow/{{u.id}}/delete'>
+                    <form style='display:inline-block' method='post' action="{% url 'permissions:delete' u.id %}">
                         {% csrf_token %}
                         <input type='hidden' name='permissionid' value='{{u.id}}'>
                         <input type='hidden' name='nextpath'value={{request.path}}>

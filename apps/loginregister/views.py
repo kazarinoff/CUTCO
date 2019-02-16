@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 def index(request):
     if 'loggedid' in request.session:
-        return redirect('/courses/')
+        return redirect('courses:home')
     if 'errors' not in request.session:
         request.session['errors']={}
     return render(request,'login.html',{'colleges':College.objects.all(),'errors':request.session['errors']})
@@ -40,11 +40,11 @@ def regval(request):
                     q.save()
             x.save()
             request.session['loggedid']=User.objects.last().id
-            return redirect('/courses/treqtable/')
+            return redirect('courses:treqtable')
         else:
             request.session['errors']=errors
-            return redirect('/login/')
-    return redirect('/login/')
+            return redirect('loginapp:index')
+    return redirect('loginapp:index')
 
 def loginval(request):
     validator= ValidationManager()
@@ -53,14 +53,14 @@ def loginval(request):
         errors= validator.validatelogin(request.POST)
         if not len(errors):
             request.session['loggedid']=User.objects.get(username=request.POST['username']).id
-            return redirect ('/courses/treqtable/')
+            return redirect ('courses:treqtable')
         else:
             request.session['errors']=errors
-    return redirect('/login/')
+    return redirect('loginapp:index')
 
 def logout(request):
     request.session.clear()
-    return redirect('/login/')
+    return redirect('loginapp:index')
 
 def showuser(request,uid):
     p,x,xc,xd={},{},{},{}
@@ -79,9 +79,9 @@ def edituser(request,uid):
     if 'errors' not in request.session:
         request.session['errors']={}
     if 'loggedid' not in request.session:
-        return redirect('/courses/')
-    if uid !=request.session['loggedid']:
-        return redirect('/courses/')
+        return redirect('courses:home')
+    if int(uid) !=request.session['loggedid']:
+        return redirect('courses:home')
     x=User.objects.get(id=request.session['loggedid'])
     xc=College.objects.filter(users=x)
     xd=Dept.objects.filter(users=x)
@@ -101,5 +101,5 @@ def updateuser(request):
         x.email=request.POST['email']
         x.username=request.POST['username']
         x.save()
-        return redirect('/login/profile/'+request.POST['userid'])
-    return redirect('/login/')
+        return redirect('loginapp:showprofile', uid=request.POST['userid'])
+    return redirect('loginapp:index')

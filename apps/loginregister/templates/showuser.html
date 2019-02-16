@@ -26,7 +26,7 @@
 {% endif %}
 
 {% if user == profileuser %}
-<a href="/login/profile/{{user.id}}/edit" class="badge badge-secondary">Edit My Profile</a> 
+<a href="{% url 'loginapp:edituser' user.id %}" class="badge badge-secondary">Edit My Profile</a> 
 | <a href="" class="badge badge-secondary">Delete My Profile</a>
 {% endif %}
 </body>

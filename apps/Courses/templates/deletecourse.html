@@ -11,7 +11,7 @@
     <h1>Welcome, {{user.username}}</h1>
     <div>
         <h3>Are you sure you want to delete {{course.course_name}}? This action cannot be reversed.</h3>
-        <form action="/courses/{{course.id}}/destroy/", method="POST">
+        <form action="{% url 'courses:deletecourse' course.id %}", method="POST">
             {% csrf_token %}
             <p><input type="submit" name="Delete" value="DELETE"></p>
         </form>

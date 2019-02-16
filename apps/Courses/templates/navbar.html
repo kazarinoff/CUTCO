@@ -15,17 +15,17 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active ">
-                <a class="nav-link" href="/courses/treqtable/">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url 'courses:treqtable' %}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Course Options</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
-                    <a class="dropdown-item" href="/courses/">All courses</a>
-                    <a class="dropdown-item" href="/courses/treqtable/">View Transfer Equivalencies</a>
+                    <a class="dropdown-item" href="{% url 'courses:home' %}">All courses</a>
+                    <a class="dropdown-item" href="{% url 'courses:treqtable' %}">View Transfer Equivalencies</a>
                     {% if usercolleges %}
                         <div class=dropdown-divider></div>
                         {% for college in usercolleges %}
-                            <a class='dropdown-item' href='/courses/{{college.id}}/add'>Add course to {{college.name}}</a>
+                            <a class='dropdown-item' href="{% url 'courses:addcourseform' college.id %}">Add course to {{college.name}}</a>
                         {% endfor %}
                     {% endif %}
                 </div>
@@ -34,12 +34,12 @@
             <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Permission Options</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
-                        <a class="dropdown-item" href="/login/profile/{{user.id}}">My Roles</a>
-                        <a class="dropdown-item" href="/allow/">All Roles</a>
+                        <a class="dropdown-item" href="{% url 'loginapp:showprofile' user.id %}">My Roles</a>
+                        <a class="dropdown-item" href="{% url 'permissions:home' %}">All Roles</a>
                         {% if userdepts %}
                         <div class=dropdown-divider></div>
                         {% for dept in userdepts %}
-                            <a class='dropdown-item' href='/allow/departments/{{dept.id}}/index'>Roles for {{dept.college.name}}- {{dept.name}}</a>
+                            <a class='dropdown-item' href="{% url 'permissions:addbydept' dept.id %}">Roles for {{dept.college.name}}- {{dept.name}}</a>
                         {% endfor %}
                     {% endif %}
 
@@ -53,10 +53,10 @@
                     {% if user %}
                 <a class="btn btn-info dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
-                    <a class="dropdown-item" href="/login/profile/{{user.id}}">My Profile</a>
-                    <a class="dropdown-item" href="/login/logout/">Logout</a>
+                    <a class="dropdown-item" href="{% url 'loginapp:showprofile' user.id %}">My Profile</a>
+                    <a class="dropdown-item" href="{% url 'loginapp:logout' %}">Logout</a>
                     {% else %}
-                    <a class="btn btn-info" href="/login" id="dropdown02">LOGIN</a>
+                    <a class="btn btn-info" href="{% url 'loginapp:index' %}" id="dropdown02">LOGIN</a>
                     {% endif %}
                 </div>
             </li>

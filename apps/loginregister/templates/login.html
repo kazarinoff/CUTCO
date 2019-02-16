@@ -30,7 +30,7 @@ form input, select {
     <p class='lead'>The College and University Transfer Coursebook of <strong class='text-success'>Oregon</strong></p>
     <div id="registration">
         <h5 class='display-4 text-success'>Register</h5>
-        <form action='/login/regval/' method='post'>
+        <form action="{% url 'loginapp:regval' %}" method='post'>
             {% csrf_token %}
             <div class='form-group'>{{errors.first_name}}
                 <label for='first_name'>First Name</label><input type='text' id='first_name' name="first_name"></p>
@@ -80,7 +80,7 @@ form input, select {
     </div>
     <div id="login">
         <h5 class='display-4 text-success'>Login</h5>
-        <form action='/login/loginval/' method='post'>
+        <form action="{% url 'loginapp:loginval' %}" method='post'>
             {% csrf_token %}
             <div class='form-group'>
                 {{errors.loginusername}}

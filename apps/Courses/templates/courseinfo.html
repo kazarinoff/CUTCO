@@ -15,7 +15,7 @@
     <div class='card mb-6'>
         <h3 class='card-header'>{{course.course_name}}</h3>
         {% if permission.level >= 7 %}
-        <p class='card-header'><a href="/courses/{{course.id}}/edit/" class="badge badge-secondary">Edit Course</a> | <a href="/courses/{{course.id}}/delete/" class="badge badge-secondary">Delete Course</a> | <a href="/courses/{{course.id}}/treq" class="badge badge-secondary">Set Transfer EQs</a></p>
+        <p class='card-header'><a href="{% url 'courses:editcourse' course.id %}" class="badge badge-secondary">Edit Course</a> | <a href="{% url 'courses:deletecheck' course.id %}" class="badge badge-secondary">Delete Course</a> | <a href="{% url 'courses:viewtreq' course.id %}" class="badge badge-secondary">Set Transfer EQs</a></p>
         {% endif %}
             <div class='card-body'><p>College: {{course.college.name}}</p>
             <p>Department: {{course.department.name}}</p>
@@ -27,7 +27,7 @@
             <h5 class='card-header bg-light'>Prerequisites:</h5>
             <ul class="list-group list-group-flush">
                 {% for x in prereqs %}
-                <li class='list-group-item'><a href='/courses/{{x.id}}'>{{x.course_name}}, {{x.course_number}}</a></li>
+                <li class='list-group-item'><a href="{% url 'courses:viewcourse' x.id %}">{{x.course_name}}, {{x.course_number}}</a></li>
                 {% endfor %}
             </ul>
                 </div>

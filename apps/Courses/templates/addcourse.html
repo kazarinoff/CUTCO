@@ -13,7 +13,7 @@
     <div class='col-9'>
         <div class='card mb-6'>
         <h3 class='card-header'>Add a Course to the {{college.name}} Catalog</h3>
-        <form class='card-body' action="/courses/include/", method="POST">
+        <form class='card-body' action="{% url 'courses:addcourse' %}", method="POST">
             {% csrf_token %}
             <input type='hidden' name='nextpath' value='{{ request.path }}'>
             <p>Department: <select name='deptid'>

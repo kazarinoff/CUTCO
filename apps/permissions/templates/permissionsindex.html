@@ -16,8 +16,8 @@
         <h1>{{x.grouper}}</h1>
         {% regroup x.list by departments__name as bydept %}
         {% for y in bydept %}
-            <h5>Department: <a href='/allow/departments/{{y.list.0.departments__id}}/index'>{{ y.grouper }}</a></h5>
-            <a style='margin-top:15px;margin-bottom:15px;' href='/allow/departments/{{y.list.0.departments__id}}/index' class='badge badge-primary'>Modify Department Users</a>
+            <h5>Department: <a href="{% url 'permissions:addbydept' y.list.0.departments__id %}">{{ y.grouper }}</a></h5>
+            <a style='margin-top:15px;margin-bottom:15px;' href="{% url 'permissions:addbydept' y.list.0.departments__id %}" class='badge badge-primary'>Modify Department Users</a>
             
             <table class='table table-responsive-lg table-bordered table-hover'>
                 <tr class='table-primary'>
@@ -31,11 +31,11 @@
                     {% if z.departments__id == z.departments__users__permission__dept_id %}
                         <tr>
                             <td>{{ z.departments__users__first_name }} {{ z.departments__users__last_name }}</td>
-                            <td><a href='/login/profile/{{ z.departments__users__id }}'>{{ z.departments__users__username }}</a></td>
+                            <td><a href="{% url 'loginapp:showprofile' z.departments__users__id %}">{{ z.departments__users__username }}</a></td>
                             <td>{{ z.departments__users__permission__levelname }}</td>
                             <td>
                                 {% if z.departments__id in permissions.faculty or z.departments__id in permissions.god or z.departments__id in permissions.administrator %}
-                                <form method='post' action='/allow/update'>
+                                <form method='post' action="{% url 'permissions:update' %}">
                                     {% csrf_token %}
                                     <input type='hidden' value='{{request.path}}' name='nextpath'>
                                     <select name='level' value='{{z.departments__users__permission__level}}'>

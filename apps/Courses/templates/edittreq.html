@@ -15,7 +15,7 @@
         <div class='card mb-6'>
             <h3 class='card-header'>{{course.course_name}}</h3>
             {% if permission.level >= 7 %}
-            <p class='card-header'><a href="/courses/{{course.id}}/edit/" class="badge badge-secondary">Edit Course</a> | <a href="/courses/{{course.id}}/delete/" class="badge badge-secondary">Delete Course</a> | <a href="/courses/{{course.id}}/treq" class="badge badge-secondary">Set Transfer EQs</a></p>
+            <p class='card-header'><a href="{% url 'courses:editcourse' course.id %}" class="badge badge-secondary">Edit Course</a> | <a href="{% url 'courses:deletecheck' course.id %}" class="badge badge-secondary">Delete Course</a> | <a href="{% url 'courses:viewtreq' course.id %}" class="badge badge-secondary">Set Transfer EQs</a></p>
             {% endif %}
             <div class='card-body'>
                 <p>College: {{course.college.name}}</p>
@@ -30,7 +30,7 @@
                 <ul class="list-group list-group-flush">
                     {% for x in prereqs %}
                         <li class='list-group-item'>
-                            <a href='/courses/{{x.id}}'>{{x.course_name}}, {{x.course_number}}</a>
+                            <a href="{% url 'courses:viewcourse' x.id %}">{{x.course_name}}, {{x.course_number}}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -50,7 +50,7 @@
 {% for x in groupedcourses %}
 <div class='col-4'>
 <div class='card mb-6'>
-    <form method='POST' action='/courses/{{course.id}}/treqedit'>
+    <form method='POST' action="{% url 'courses:edittreq' course.id %}">
     {% csrf_token %}
     <input type='hidden' value='{{x.grouper.id}}' name='collegeid'>
    <h5 class='card-header'>{{x.grouper.name}}</h5>

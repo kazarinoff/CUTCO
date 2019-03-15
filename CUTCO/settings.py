@@ -46,8 +46,10 @@ SECRET_KEY = ')h9ul857_14cxmb32t$$g-9o8=idpu-19wutwolkhf*^)4zf%d'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['18.222.169.82','18.222.169.82,18.222.169.82']
+# deployment version:
+# ALLOWED_HOSTS = ['18.222.169.82','18.222.169.82,18.222.169.82']
 
+ALLOWED_HOSTS = ['localhost']
 
 # Application definition
 
